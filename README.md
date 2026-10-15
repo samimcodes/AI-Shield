@@ -38,8 +38,10 @@ import { aiShield } from '@samimcodes/ai-shield';
 
 const app = express();
 
-// 🛡️ 3-Line Drop-in AI Defense
+// 🛡️ 3-Line Drop-in AI Defense + Live Admin Security Dashboard
 app.use(aiShield({
+  enableDashboard: true,         // 📊 Mounts Live Security Dashboard
+  dashboardPath: '/admin/ai-shield', // 👈 Visit in browser for live alerts!
   poisonContentType: 'HTML',     // 'HTML' | 'JSON' | 'SITEMAP'
   injectHoneypotLinks: true,     // Automatically injects invisible trap routes
   excludePaths: ['/health', '/metrics'], // Exclude DevOps endpoints
@@ -52,9 +54,20 @@ app.get('/api/products', (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server protected with ai-shield on port 3000');
+  console.log('Server protected on port 3000');
+  console.log('Live Security Dashboard: http://localhost:3000/admin/ai-shield');
 });
 ```
+
+---
+
+## 📊 Built-in Live Security Dashboard & Real-Time Alerts
+
+No external analytics or complex cloud setup required. Just set `enableDashboard: true`, and visit `/admin/ai-shield` on your running server to see:
+- 🚨 **Real-Time Attack Alerts**: Instant pop-up banners and audio chimes whenever an AI crawler attempts to scrape your endpoints.
+- ⚡ **Server-Sent Events (SSE)**: Live streaming table of intercepted bots without manual page refresh.
+- 🧪 **One-Click Attack Simulator**: Test and verify your bot defense instantly right from the browser.
+- 📈 **Key Security Metrics**: Bots intercepted, honeypot traps sprung, and fake tokens fed to scrapers.
 
 ---
 
@@ -107,6 +120,9 @@ export const config = {
 
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
+| `enableDashboard` | `boolean` | `false` | Mounts built-in live real-time security dashboard with SSE |
+| `dashboardPath` | `string` | `'/admin/ai-shield'` | Path prefix where the live security dashboard is served |
+| `dashboardAuth` | `DashboardAuthConfig` | `undefined` | Optional credentials (token / Basic Auth) for dashboard |
 | `poisonContentType` | `'HTML' \| 'JSON' \| 'SITEMAP'` | `'HTML'` | Format of poisoned payload returned to AI bots |
 | `injectHoneypotLinks` | `boolean` | `true` | Automatically inject hidden CSS-invisible trap links |
 | `excludePaths` | `string[]` | `[]` | Array of path prefixes exempt from inspection |

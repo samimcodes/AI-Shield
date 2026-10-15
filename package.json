@@ -1,6 +1,6 @@
 {
   "name": "@samimcodes/ai-shield",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Enterprise-grade Express.js middleware to detect and poison unauthorized AI crawlers while preserving SEO for legitimate bots.",
   "type": "module",
   "main": "./dist/index.cjs",

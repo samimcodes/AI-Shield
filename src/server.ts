@@ -24,6 +24,8 @@ app.set('trust proxy', 1);
 app.use(
   aiShieldMiddleware({
     debug: true,
+    enableDashboard: true,
+    dashboardPath: '/admin/ai-shield',
     poisonContentType: 'HTML',
     injectHoneypotLinks: true,
     excludePaths: ['/health', '/metrics'],
@@ -248,6 +250,7 @@ let server: ReturnType<typeof app.listen> | null = null;
 if (process.env['NODE_ENV'] !== 'test' && !process.env['VITEST']) {
   server = app.listen(PORT, () => {
     console.log(`\n🛡️  ai-shield server listening on http://localhost:${PORT}`);
+    console.log(`   - Live Security Monitor: http://localhost:${PORT}/admin/ai-shield`);
     console.log(`   - Homepage:             http://localhost:${PORT}/`);
     console.log(`   - Protected API:        http://localhost:${PORT}/api/products`);
     console.log(`   - Canonical Honeypot:   http://localhost:${PORT}${CANONICAL_TRAP.path}`);

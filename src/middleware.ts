@@ -28,6 +28,7 @@ import { BotDetector } from './core/detector.js';
 import { PoisonEngine } from './core/poison.js';
 import { HoneypotManager } from './core/honeypot.js';
 import { TelemetryEmitter, hashClientIp } from './core/telemetry.js';
+import { DashboardManager } from './core/dashboard.js';
 import {
   BotCategory,
   Confidence,
@@ -55,10 +56,11 @@ const DEFAULT_SCORE_THRESHOLD = 50;
 // ─── Factory ──────────────────────────────────────────────────────────────
 
 /**
- * Extended RequestHandler with attached telemetry subsystem.
+ * Extended RequestHandler with attached telemetry and dashboard subsystems.
  */
 export interface AiShieldHandler extends RequestHandler {
   telemetry?: TelemetryEmitter | undefined;
+  dashboard?: DashboardManager | undefined;
 }
 
 /**
@@ -83,6 +85,9 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
     debug               = false,
     apiKey,
     dashboardUrl,
+    enableDashboard     = false,
+    dashboardPath       = '/admin/ai-shield',
+    dashboardAuth,
   } = options;
 
   // ── Instantiate subsystems ─────────────────────────────────────────────
@@ -95,6 +100,12 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
       ? new TelemetryEmitter({ apiKey, dashboardUrl })
       : undefined;
 
+  // Optional live security dashboard
+  const dashboard = enableDashboard
+    ? new DashboardManager({ basePath: dashboardPath, auth: dashboardAuth, debug })
+    : undefined;
+  const dashboardRouter = dashboard ? dashboard.buildRouter() : undefined;
+
   const honeypot = new HoneypotManager(poisonEngine, {
     customRoutes: honeypotPaths,
     ttlMs: honeypotTtlMs,
@@ -104,6 +115,20 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
         console.warn(
           `[ai-shield] Honeypot trap: "${route.label}" | IP: ${ip} | UA: ${ua.slice(0, 80)}`,
         );
+      }
+
+      // Record in live dashboard if enabled
+      if (dashboard !== undefined) {
+        dashboard.recordEvent({
+          botName: `HoneypotTrap:${route.label}`,
+          category: BotCategory.AI_CRAWLER,
+          path: route.path,
+          score: 100,
+          signals: ['HONEYPOT_TRIGGERED'],
+          ipHash: hashClientIp(ip),
+          userAgent: ua,
+          action: 'HONEYPOT_TRAP',
+        });
       }
 
       // Emit telemetry event if configured
@@ -139,6 +164,19 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
   // ── Middleware function ────────────────────────────────────────────────
 
   const shield: AiShieldHandler = (req: Request, res: Response, next: NextFunction): void => {
+    // 0. Handle live dashboard requests
+    if (dashboardRouter !== undefined && (req.path === dashboardPath || req.path.startsWith(dashboardPath + '/'))) {
+      const originalUrl = req.url;
+      const subPath = req.path.slice(dashboardPath.length) || '/';
+      const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+      req.url = subPath + query;
+      dashboardRouter(req, res, (err) => {
+        req.url = originalUrl;
+        next(err);
+      });
+      return;
+    }
+
     // 1. Skip explicitly excluded paths
     if (excludeSet.has(req.path)) {
       next();
@@ -166,6 +204,7 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
 
       // ── 7. GOOD_BOT — always pass through (SEO safety) ───────────────
       if (detection.category === BotCategory.GOOD_BOT) {
+        dashboard?.recordGoodBot(detection.label, req.path);
         if (debug) {
           console.info(
             `[ai-shield] Good bot allowed: ${detection.label} | ${req.method} ${req.path}`,
@@ -177,6 +216,7 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
 
       // ── 8. Score gate — below threshold → pass through ───────────────
       if (detection.score < scoreThreshold && !isHoneypotFlagged) {
+        dashboard?.recordRequest();
         if (debug && detection.score > 0) {
           console.info(
             `[ai-shield] Below threshold (${detection.score} < ${scoreThreshold}): ${detection.label} | ${req.path}`,
@@ -220,6 +260,20 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
         effectiveType = 'JSON';
       }
 
+      // Record in live dashboard if enabled
+      if (dashboard !== undefined) {
+        dashboard.recordEvent({
+          botName: detection.label,
+          category: detection.category,
+          path: req.path,
+          score: detection.score,
+          signals: detection.signals,
+          ipHash: hashClientIp(clientIp),
+          userAgent: (req.headers['user-agent'] as string | undefined) ?? '',
+          action: effectiveType === 'JSON' ? 'POISON_JSON' : (effectiveType === 'SITEMAP' ? 'POISON_SITEMAP' : 'POISON_HTML'),
+        });
+      }
+
       const payload = poisonEngine.generate(req.path, effectiveType);
 
       // ── 11. Honeypot link injection ───────────────────────────────────
@@ -249,6 +303,7 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
   };
 
   shield.telemetry = telemetry;
+  shield.dashboard = dashboard;
   return shield;
 }
 
@@ -260,6 +315,7 @@ export { BotDetector } from './core/detector.js';
 export { PoisonEngine, syntheticTokenPublic } from './core/poison.js';
 export { HoneypotManager, IpTrapCache, CANONICAL_TRAP } from './core/honeypot.js';
 export { TelemetryEmitter, hashClientIp } from './core/telemetry.js';
+export { DashboardManager } from './core/dashboard.js';
 export type {
   AiShieldOptions,
   AiShieldRequestMeta,
@@ -271,6 +327,9 @@ export type {
   TrapCacheEntry,
   SignalWeights,
   TelemetryEvent,
+  DashboardAuthConfig,
+  DashboardSecurityEvent,
+  DashboardStats,
 } from './types/index.js';
 export {
   BotCategory,

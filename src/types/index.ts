@@ -255,6 +255,59 @@ export interface AiShieldOptions {
    * Defaults to 'https://telemetry.ai-shield.dev/v1/events'.
    */
   dashboardUrl?: string | undefined;
+
+  /**
+   * When `true`, enables a self-contained live real-time security dashboard
+   * with live alerts and event stream directly in your Express app.
+   * Defaults to `false`.
+   */
+  enableDashboard?: boolean | undefined;
+
+  /**
+   * Route prefix where the live security dashboard will be mounted.
+   * Defaults to `'/admin/ai-shield'`.
+   */
+  dashboardPath?: string | undefined;
+
+  /**
+   * Optional authentication credentials to secure the dashboard.
+   */
+  dashboardAuth?: DashboardAuthConfig | undefined;
+}
+
+// ─── Dashboard Types ──────────────────────────────────────────────────────
+
+/** Optional authentication credentials for the built-in dashboard. */
+export interface DashboardAuthConfig {
+  username?: string | undefined;
+  password?: string | undefined;
+  token?: string | undefined;
+}
+
+/** Individual live security event displayed on the dashboard. */
+export interface DashboardSecurityEvent {
+  id: string;
+  timestamp: string;
+  botName: string;
+  category: BotCategory;
+  path: string;
+  score: number;
+  signals: DetectionSignal[];
+  ipHash: string;
+  userAgent: string;
+  action: 'POISON_HTML' | 'POISON_JSON' | 'POISON_SITEMAP' | 'HONEYPOT_TRAP' | 'SIMULATED_TEST';
+}
+
+/** Real-time statistics aggregated by the dashboard manager. */
+export interface DashboardStats {
+  totalRequests: number;
+  botsIntercepted: number;
+  goodBotsAllowed: number;
+  honeypotTriggers: number;
+  poisonPayloadsServed: number;
+  estimatedFakeTokens: number;
+  topBots: Record<string, number>;
+  topRoutes: Record<string, number>;
 }
 
 // ─── Telemetry ────────────────────────────────────────────────────────────

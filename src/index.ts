@@ -86,6 +86,7 @@ export { BotDetector } from './core/detector.js';
 export { PoisonEngine, syntheticTokenPublic } from './core/poison.js';
 export { HoneypotManager, IpTrapCache, CANONICAL_TRAP } from './core/honeypot.js';
 export { TelemetryEmitter, hashClientIp } from './core/telemetry.js';
+export { DashboardManager } from './core/dashboard.js';
 
 // ─── Types and Constants ───────────────────────────────────────────────────
 
@@ -102,6 +103,9 @@ export type {
   TrapCacheEntry,
   SignalWeights,
   TelemetryEvent,
+  DashboardAuthConfig,
+  DashboardSecurityEvent,
+  DashboardStats,
 } from './types/index.js';
 
 export {
