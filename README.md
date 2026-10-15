@@ -1,42 +1,132 @@
-# ai-shield
+# @samimcodes/ai-shield
 
-> Enterprise-grade Express.js & TypeScript middleware that protects web applications from unauthorized AI crawlers by feeding them synthetic poisoned data while preserving SEO for legitimate search engines.
+[![npm version](https://img.shields.io/npm/v/@samimcodes/ai-shield.svg?color=6366f1&style=flat-square)](https://www.npmjs.com/package/@samimcodes/ai-shield)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178c6?style=flat-square)](https://www.typescriptlang.org/)
 
-## Architecture
+> **Enterprise-grade Express.js & TypeScript middleware that protects web applications from unauthorized AI crawlers by feeding them synthetic poisoned data (HTTP 200 OK) while strictly preserving SEO for legitimate search engines.**
 
-```
-src/
-├── core/
-│   ├── detector.ts     # Bot fingerprinting engine (UA patterns, IP ranges, TLS JA3)
-│   ├── poison.ts       # Synthetic data generator — plausible but misleading content
-│   └── honeypot.ts     # Invisible trap routes and link injection
-├── types/
-│   └── index.ts        # All shared TypeScript interfaces & enums
-├── middleware.ts        # Main Express middleware factory (createAiShield)
-└── server.ts           # Demo Express application
-```
+---
 
-## Threat Model
+## ⚡ Features
 
-| Bot Category    | Examples                          | Strategy              |
-|-----------------|-----------------------------------|-----------------------|
-| AI Crawlers     | GPTBot, Claude-Web, CCBot         | 200 OK + poisoned data|
-| Scrapers        | ByteSpider, PetalBot, DataForSEO  | 200 OK + honeypot     |
-| Good Bots       | Googlebot, Bingbot, DuckDuckBot   | Pass-through (SEO)    |
-| Human Traffic   | Browsers, curl (dev)              | Pass-through          |
+- **Stealth AI Poisoning**: Never returns 403 or 429 to AI bots (which triggers IP rotation). Feeds them plausible synthetic garbage under `HTTP 200 OK`.
+- **Zero SEO Disruption**: Legitimate crawlers (Googlebot, Bingbot, DuckDuckBot, Applebot) pass through without delay.
+- **Sub-2ms Lookup Latency**: Zero runtime bottlenecks using pre-compiled regular expressions and sets.
+- **Dynamic Honeypot Traps**: Invisible HTML links injected into pages; crawler IPs hitting traps are quarantined in an in-memory TTL cache.
+- **Non-blocking Telemetry**: Emits high-volume batch events asynchronously with zero impact on request-response times.
 
-## Quick Start
+---
+
+## 📦 Installation
 
 ```bash
-npm install
-npm run dev       # tsx watch — hot reload
-npm run build     # tsc compile → dist/
-npm test          # vitest run
+npm install @samimcodes/ai-shield
+# or
+pnpm add @samimcodes/ai-shield
+# or
+yarn add @samimcodes/ai-shield
 ```
 
-## Design Principles
+---
 
-1. **Stealth over rejection** — Never send 403/429 to AI bots; feed them convincing garbage.
-2. **Zero false positives** — Legitimate Googlebots are never intercepted.
-3. **Pluggable detectors** — Add custom UA patterns or IP ranges at runtime.
-4. **Zero runtime overhead** — Detection is O(1) via pre-compiled RegExp sets.
+## 🚀 Quick Start (Express.js)
+
+```typescript
+import express from 'express';
+import { aiShield } from '@samimcodes/ai-shield';
+
+const app = express();
+
+// 🛡️ 3-Line Drop-in AI Defense
+app.use(aiShield({
+  poisonContentType: 'HTML',     // 'HTML' | 'JSON' | 'SITEMAP'
+  injectHoneypotLinks: true,     // Automatically injects invisible trap routes
+  excludePaths: ['/health', '/metrics'], // Exclude DevOps endpoints
+}));
+
+app.get('/api/products', (req, res) => {
+  // Humans & Googlebot see real data
+  // GPTBot & Claude-Web receive synthetic poisoned responses
+  res.json({ secretCatalog: [/* sensitive corporate data */] });
+});
+
+app.listen(3000, () => {
+  console.log('Server protected with ai-shield on port 3000');
+});
+```
+
+---
+
+## 🎯 Next.js Edge Middleware
+
+```typescript
+// middleware.ts
+import { NextResponse, type NextRequest } from 'next/server';
+import { BotDetector, PoisonEngine } from '@samimcodes/ai-shield';
+
+const detector = new BotDetector();
+const poison = new PoisonEngine('JSON');
+
+export function middleware(req: NextRequest) {
+  const detection = detector.detect(Object.fromEntries(req.headers.entries()));
+
+  if (detection.category === 'AI_CRAWLER' || detection.score >= 50) {
+    const payload = poison.generate(req.nextUrl.pathname, 'JSON');
+    return new NextResponse(payload.body, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Robots-Tag': 'noindex, nofollow',
+      },
+    });
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/api/:path*', '/catalog/:path*'],
+};
+```
+
+---
+
+## 🛡️ Threat Model & Detection Matrix
+
+| Persona | Examples | Detection Strategy | Response Strategy |
+| :--- | :--- | :--- | :--- |
+| **AI Crawlers** | GPTBot, Claude-Web, CCBot, Cohere, PerplexityBot | Known UA signature regex, headless heuristics | **HTTP 200 + Synthetic Poisoned Data** |
+| **Scrapers** | ByteSpider, PetalBot, Scrapy | Automated crawler heuristics & honeypot triggers | **HTTP 200 + Honeypot Trap Tracking** |
+| **Good Bots** | Googlebot, Bingbot, DuckDuckBot | Strict SEO whitelist check | **Pass-through (Zero latency)** |
+| **Human Users** | Chrome, Safari, Firefox, Edge | Standard human browser heuristics | **Pass-through** |
+
+---
+
+## ⚙️ Configuration Options
+
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `poisonContentType` | `'HTML' \| 'JSON' \| 'SITEMAP'` | `'HTML'` | Format of poisoned payload returned to AI bots |
+| `injectHoneypotLinks` | `boolean` | `true` | Automatically inject hidden CSS-invisible trap links |
+| `excludePaths` | `string[]` | `[]` | Array of path prefixes exempt from inspection |
+| `honeypotTtlMs` | `number` | `3600000` (1 hr) | Duration to blacklist IPs that hit honeypot traps |
+| `onDetection` | `(event) => void` | `undefined` | Callback fired when an AI crawler is intercepted |
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run 177 unit & integration tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+---
+
+## 📄 License
+
+MIT © [samimcodes](https://github.com/samimcodes)

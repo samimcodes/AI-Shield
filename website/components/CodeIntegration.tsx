@@ -9,7 +9,7 @@ export default function CodeIntegration() {
 
   const snippets = {
     express: `import express from 'express';
-import { aiShield } from 'ai-shield';
+import { aiShield } from '@samimcodes/ai-shield';
 
 const app = express();
 
@@ -26,7 +26,7 @@ app.listen(3000);`,
 
     nextjs: `// middleware.ts (Next.js App Router & Edge)
 import { NextResponse, type NextRequest } from 'next/server';
-import { BotDetector, PoisonEngine } from 'ai-shield';
+import { BotDetector, PoisonEngine } from '@samimcodes/ai-shield';
 
 const detector = new BotDetector();
 const poison = new PoisonEngine('JSON');
@@ -49,7 +49,7 @@ export function middleware(req: NextRequest) {
 export const config = { matcher: ['/api/:path*', '/catalog/:path*'] };`,
 
     fastify: `import Fastify from 'fastify';
-import { createAiShield } from 'ai-shield';
+import { createAiShield } from '@samimcodes/ai-shield';
 
 const fastify = Fastify();
 

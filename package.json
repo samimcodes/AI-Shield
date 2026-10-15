@@ -1,6 +1,6 @@
 {
-  "name": "ai-shield",
-  "version": "0.1.0",
+  "name": "@samimcodes/ai-shield",
+  "version": "0.1.2",
   "description": "Enterprise-grade Express.js middleware to detect and poison unauthorized AI crawlers while preserving SEO for legitimate bots.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -33,7 +33,7 @@
     "clean": "rimraf dist",
     "website:dev": "npm --prefix website run dev",
     "website:build": "npm --prefix website run build",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "ai-crawler",

@@ -15,7 +15,7 @@ import {
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
-  const installCmd = 'npm i ai-shield';
+  const installCmd = 'npm i @samimcodes/ai-shield';
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(installCmd);
