@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
+import { execSync } from 'node:child_process';
 
 const CWD = process.cwd();
 
@@ -87,10 +88,43 @@ function isEsmProject(filePath: string): boolean {
   return content.includes('import ') && content.includes('from ');
 }
 
+/** Auto-install package if not already present in package.json */
+function ensurePackageInstalled(): void {
+  const pkgPath = path.join(CWD, 'package.json');
+  if (!fs.existsSync(pkgPath)) return;
+
+  try {
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+    if (allDeps['@samimcodes/ai-shield']) {
+      return; // Already installed
+    }
+
+    console.log(`📦 Auto-installing ${colors.cyan}@samimcodes/ai-shield${colors.reset}...`);
+
+    let installCmd = 'npm install @samimcodes/ai-shield';
+    if (fs.existsSync(path.join(CWD, 'pnpm-lock.yaml'))) {
+      installCmd = 'pnpm add @samimcodes/ai-shield';
+    } else if (fs.existsSync(path.join(CWD, 'yarn.lock'))) {
+      installCmd = 'yarn add @samimcodes/ai-shield';
+    } else if (fs.existsSync(path.join(CWD, 'bun.lockb'))) {
+      installCmd = 'bun add @samimcodes/ai-shield';
+    }
+
+    execSync(installCmd, { cwd: CWD, stdio: 'inherit' });
+    console.log(`${colors.green}✓ Installed @samimcodes/ai-shield into project dependencies!${colors.reset}\n`);
+  } catch {
+    console.log(`${colors.yellow}ℹ Tip: If needed, run npm install @samimcodes/ai-shield${colors.reset}\n`);
+  }
+}
+
 /** Automatic init command. */
 async function runInit() {
   banner();
   console.log(`🔍 Scanning project in: ${colors.bold}${CWD}${colors.reset}\n`);
+
+  // Ensure @samimcodes/ai-shield is installed
+  ensurePackageInstalled();
 
   // 1. Next.js Project Detection
   if (isNextJsProject()) {
