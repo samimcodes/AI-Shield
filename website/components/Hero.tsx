@@ -15,7 +15,7 @@ import {
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
-  const installCmd = 'npm i @samimcodes/ai-shield';
+  const installCmd = 'npx @samimcodes/ai-shield init';
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(installCmd);

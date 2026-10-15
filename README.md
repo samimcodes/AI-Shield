@@ -30,7 +30,22 @@ yarn add @samimcodes/ai-shield
 
 ---
 
-## 🚀 Quick Start (Express.js)
+## ⚡ Zero-Code Automatic Setup (Recommended)
+
+Don't want to write or edit code manually? Just run this single command in your project:
+
+```bash
+npx @samimcodes/ai-shield init
+```
+
+The wizard will:
+1. 🔍 Detect your server entrypoint (`server.js`, `index.ts`, or Next.js App Router).
+2. 🛡️ Automatically inject the AI-Shield middleware & live dashboard.
+3. 🚀 Provide your live monitoring URL: `http://localhost:3000/admin/ai-shield`
+
+---
+
+## 🚀 Manual Quick Start (Express.js)
 
 ```typescript
 import express from 'express';

@@ -86,8 +86,7 @@ await fastify.listen({ port: 3000 });`,
             Drop-in Integration in Under 3 Minutes
           </h2>
           <p className="mt-3 text-slate-300 text-base sm:text-lg">
-            No reverse proxy reconfiguration or cloud WAF vendor lock-in. Just install the npm package
-            and mount the middleware.
+            Run <code className="text-cyan-400 font-mono text-sm px-2 py-0.5 rounded bg-white/5">npx @samimcodes/ai-shield init</code> for automatic zero-code setup, or paste the 3-line drop-in middleware below.
           </p>
         </div>
 
