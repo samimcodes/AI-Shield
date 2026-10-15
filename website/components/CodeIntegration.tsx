@@ -13,8 +13,9 @@ import { aiShield } from '@samimcodes/ai-shield';
 
 const app = express();
 
-// 🛡️ 3-Line Drop-in AI Defense
+// 🛡️ 3-Line Drop-in AI Defense + Live Admin Dashboard
 app.use(aiShield({
+  enableDashboard: true,        // 📊 Live Security Monitor at /admin/ai-shield
   poisonContentType: 'HTML',    // 'HTML' | 'JSON' | 'SITEMAP'
   injectHoneypotLinks: true,    // Injects invisible trap links
   excludePaths: ['/health'],    // Exclude DevOps health checks
@@ -22,7 +23,9 @@ app.use(aiShield({
 
 // Real routes are completely protected from AI scrapers
 app.get('/api/products', (req, res) => res.json({ secretCatalog: [...] }));
-app.listen(3000);`,
+app.listen(3000, () => {
+  console.log('Live Monitor: http://localhost:3000/admin/ai-shield');
+});`,
 
     nextjs: `// middleware.ts (Next.js App Router & Edge)
 import { NextResponse, type NextRequest } from 'next/server';
