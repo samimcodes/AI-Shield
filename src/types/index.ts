@@ -170,6 +170,49 @@ export interface TrapCacheEntry {
   triggeringTrap: string;
 }
 
+// ─── Open-Core SaaS & Multi-Tenancy ──────────────────────────────────────
+
+/** Supported subscription plans in the multi-tenant architecture. */
+export type SaasPlan = 'FREE' | 'PRO' | 'BUSINESS';
+
+/** Bot action recorded in BotLog. */
+export type BotAction = 'BLOCKED' | 'POISONED';
+
+/** Feature matrix for a given subscription plan. */
+export interface SaasTierFeatures {
+  plan: SaasPlan;
+  maxMonthlyRequests: number;
+  allowedBots: string[];
+  dynamicPoisoning: boolean;
+  honeypotTraps: boolean;
+  advancedBots: boolean;
+}
+
+/** Result of validating an API key against the SaaS control plane. */
+export interface ApiKeyValidationResult {
+  valid: boolean;
+  plan: SaasPlan;
+  allowedBots: string[];
+  dynamicPoisoning: boolean;
+  limitExceeded: boolean;
+  requestsThisMonth: number;
+  monthlyLimit: number;
+  remainingRequests: number;
+  error?: string | undefined;
+  fallback?: boolean | undefined;
+  cached?: boolean | undefined;
+}
+
+/** Payload sent to log bot events asynchronously without latency. */
+export interface BotEventPayload {
+  apiKey?: string | undefined;
+  botName: string;
+  path: string;
+  actionTaken: BotAction;
+  bandwidthSavedBytes?: number | bigint | undefined;
+  timestamp?: string | undefined;
+}
+
 // ─── Middleware Config ─────────────────────────────────────────────────────
 
 /**
@@ -245,10 +288,28 @@ export interface AiShieldOptions {
   debug?: boolean | undefined;
 
   /**
-   * Optional API key to authenticate with the ai-shield telemetry service.
-   * When provided, activates asynchronous non-blocking event emissions.
+   * Optional API key (prefixed with `as_live_`) to authenticate with the
+   * multi-tenant SaaS control plane and validate tier quotas (Free/Pro/Business).
    */
   apiKey?: string | undefined;
+
+  /**
+   * Target endpoint URL for API key validation.
+   * Defaults to 'https://ai-shield.dev/api/v1/validate' (or your Next.js SaaS URL).
+   */
+  validationUrl?: string | undefined;
+
+  /**
+   * In-memory cache TTL for API key validation results in milliseconds.
+   * Defaults to 60,000 (60 seconds) to ensure sub-2ms lookup latency.
+   */
+  validationCacheTtlMs?: number | undefined;
+
+  /**
+   * Fallback plan to apply if API key validation service is temporarily unreachable
+   * or rate-limits are exceeded. Defaults to 'FREE'.
+   */
+  fallbackPlan?: SaasPlan | undefined;
 
   /**
    * Target endpoint URL for telemetry event reporting.
@@ -335,6 +396,12 @@ export interface TelemetryEvent {
 export interface AiShieldRequestMeta {
   detection: DetectionResult;
   poisoned: boolean;
+  saas?: {
+    plan: SaasPlan;
+    apiKeyValid: boolean;
+    limitExceeded: boolean;
+    dynamicPoisoning: boolean;
+  } | undefined;
 }
 
 /** Configuration options alias for the aiShield middleware. */

@@ -1,0 +1,71 @@
+// This is your Prisma schema file for AI-Shield Multi-Tenant SaaS
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  FREE
+  PRO
+  BUSINESS
+}
+
+enum ActionTaken {
+  BLOCKED
+  POISONED
+}
+
+model User {
+  id                     String    @id @default(cuid())
+  email                  String    @unique
+  name                   String?
+  plan                   Plan      @default(FREE)
+  lemonSqueezyCustomerId String?
+  subscriptionStatus     String?
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  apiKeys                ApiKey[]
+
+  @@map("users")
+}
+
+model ApiKey {
+  id                String    @id @default(cuid())
+  key               String    @unique // Prefixed with 'as_live_'
+  name              String
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive          Boolean   @default(true)
+  requestsThisMonth Int       @default(0)
+  quotaResetAt      DateTime  @default(now())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  botLogs           BotLog[]
+
+  @@index([key])
+  @@index([userId])
+  @@map("api_keys")
+}
+
+model BotLog {
+  id                  String      @id @default(cuid())
+  apiKeyId            String
+  apiKey              ApiKey      @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  botName             String
+  path                String
+  actionTaken         ActionTaken
+  bandwidthSavedBytes BigInt      @default(0)
+  timestamp           DateTime    @default(now())
+
+  @@index([apiKeyId, timestamp])
+  @@map("bot_logs")
+}

@@ -1,141 +1,141 @@
 'use client';
 
 import React from 'react';
-import { Check, Zap, Sparkles, Shield, ArrowRight } from 'lucide-react';
+import { Check, Sparkles, ArrowRight } from 'lucide-react';
 
 export default function Pricing() {
-  const plans = [
+  const tiers = [
     {
-      name: 'Developer',
+      name: 'Free',
       price: '$0',
-      period: 'forever free',
-      description: 'Ideal for open-source projects, indie hackers, and small web applications.',
+      period: '/mo',
+      description: 'Essential protection for indie projects and personal sites.',
       features: [
-        'Up to 10,000 intercepted requests / mo',
-        'Basic synthetic poison generator (HTML & JSON)',
-        'Built-in SEO whitelist (Googlebot, Bingbot)',
-        'Core user-agent & header heuristic rules',
-        'Standard in-memory honeypot registry',
-        'Community Discord & GitHub support',
+        '5,000 bot hits / month',
+        'Basic GPTBot block & poison',
+        '24-hour log retention',
+        'Community Discord support',
       ],
-      cta: 'Install Open Source',
-      highlight: false,
-      badge: 'Free Tier',
+      cta: 'Start Free',
+      popular: false,
+      buttonClass:
+        'bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 hover:border-white/20',
     },
     {
       name: 'Pro',
-      price: '$19',
-      period: 'per month',
-      description: 'For growing SaaS and high-traffic businesses defending proprietary data.',
+      price: '$29',
+      period: '/mo',
+      description: 'Comprehensive defense for high-value SaaS, blogs & digital media.',
       features: [
-        'Unlimited bot interceptions & data poisoning',
-        'Contextual academic & financial poison engines',
-        'Custom Telemetry API & real-time webhook flusher',
-        'Priority weekly AI crawler fingerprint updates',
-        'Multi-route honeypot trap network generator',
-        'Dashboard metrics & attack analytics',
-        'Standard email & priority support',
+        '500,000 bot hits / month',
+        'All AI bots blocked (GPTBot, Claude, ByteDance, Meta)',
+        'Dynamic Data Poisoning (HTTP 200 synthetic data)',
+        '90-day analytics & instant email alerts',
       ],
-      cta: 'Start 14-Day Free Trial',
-      highlight: true,
-      badge: 'Most Popular',
+      cta: 'Upgrade to Pro',
+      popular: true,
+      buttonClass:
+        'bg-[#06B6D4] hover:bg-cyan-400 text-zinc-950 font-semibold shadow-lg shadow-cyan-500/25',
     },
     {
-      name: 'Enterprise',
+      name: 'Business',
       price: '$99',
-      period: 'per month',
-      description: 'For mission-critical digital media, e-commerce, and high-frequency data publishers.',
+      period: '/mo',
+      description: 'Enterprise scale, custom proxies & mission-critical reliability.',
       features: [
-        'Custom fine-tuned synthetic hallucination LLM',
-        'Reverse DNS cryptographic Googlebot verification',
-        'Global distributed Redis/Valkey IP trap sync',
-        'Dedicated Slack channel & security architect',
+        'Unlimited bot hits / month',
+        'Cloudflare Edge Proxy & custom rules',
         '99.99% uptime SLA guarantee',
-        'SOC2 Type II & HIPAA compliance assistance',
+        'Dedicated security architect & priority support',
       ],
-      cta: 'Contact Architecture Team',
-      highlight: false,
-      badge: 'Custom Scale',
+      cta: 'Contact Sales',
+      popular: false,
+      buttonClass:
+        'bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 hover:border-white/20',
     },
   ];
 
   return (
     <section id="pricing" className="py-20 md:py-28 relative">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 px-3 py-1 text-xs font-semibold text-cyan-400 mb-3">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Transparent Pricing</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Stop Scraping Without Breaking Your Budget
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#06B6D4] font-semibold">
+            Predictable Pricing
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
+            Simple, Transparent Tiers
           </h2>
-          <p className="mt-3 text-slate-300 text-base sm:text-lg">
-            Start for free in development. Scale with enterprise threat feeds and centralized telemetry.
+          <p className="text-zinc-400 text-base mt-3 leading-relaxed">
+            Protect your proprietary data today. Scale seamlessly as your traffic expands.
           </p>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan, idx) => (
+        {/* 3-Tier Pricing Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          {tiers.map((tier) => (
             <div
-              key={idx}
-              className={`relative rounded-2xl p-8 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between ${
-                plan.highlight
-                  ? 'bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 border-2 border-cyan-500/60 shadow-2xl shadow-cyan-500/15 lg:-translate-y-2'
-                  : 'bg-slate-900/40 border border-white/10 hover:border-white/20'
+              key={tier.name}
+              className={`relative rounded-2xl flex flex-col justify-between p-7 backdrop-blur-xl transition-all duration-300 ${
+                tier.popular
+                  ? 'border-2 border-[#06B6D4] bg-zinc-900/80 shadow-[0_0_50px_-12px_rgba(6,182,212,0.3)] md:-translate-y-2'
+                  : 'border border-white/10 bg-zinc-900/60 hover:border-white/20'
               }`}
             >
-              {plan.highlight && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-400 px-3.5 py-0.5 text-xs font-extrabold text-slate-950 uppercase tracking-wider shadow-md">
-                  {plan.badge}
+              {/* Popular Badge */}
+              {tier.popular && (
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-[#06B6D4] px-3 py-0.5 text-xs font-bold text-zinc-950 shadow-md">
+                    <Sparkles className="h-3 w-3" />
+                    <span>Most Popular</span>
+                  </div>
                 </div>
               )}
 
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-white">{plan.name}</h3>
-                  {!plan.highlight && (
-                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-400">
-                      {plan.badge}
+                {/* Plan Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xl font-bold text-white">{tier.name}</h3>
+                  {tier.name === 'Pro' && (
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                      Recommended
                     </span>
                   )}
                 </div>
 
-                <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-                  {plan.description}
+                <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
+                  {tier.description}
                 </p>
 
-                <div className="flex items-baseline gap-1.5 mb-6">
-                  <span className="text-4xl sm:text-5xl font-extrabold text-white font-mono">
-                    {plan.price}
+                {/* Price Display */}
+                <div className="flex items-baseline gap-1 mb-6 pb-6 border-b border-white/5">
+                  <span className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+                    {tier.price}
                   </span>
-                  <span className="text-xs text-slate-400 font-mono">/{plan.period}</span>
+                  <span className="text-xs text-zinc-500 font-mono">{tier.period}</span>
                 </div>
 
-                <div className="space-y-3 pt-6 border-t border-white/10">
-                  {plan.features.map((feature, fIdx) => (
-                    <div key={fIdx} className="flex items-start gap-2.5 text-xs text-slate-300">
-                      <Check className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
-                      <span>{feature}</span>
-                    </div>
+                {/* Crisp 4-5 Bullet Points */}
+                <ul className="space-y-3.5 text-xs text-zinc-300 mb-8">
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5">
+                      <div className="h-4 w-4 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <Check className="h-3 w-3 text-[#10B981]" />
+                      </div>
+                      <span className="leading-snug">{feature}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/5">
-                <a
-                  href="#simulator"
-                  className={`w-full inline-flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-bold transition-all ${
-                    plan.highlight
-                      ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-950 hover:brightness-110 shadow-lg shadow-cyan-500/20 active:scale-[0.98]'
-                      : 'border border-white/15 bg-white/5 text-white hover:bg-white/10 hover:border-white/25 active:scale-[0.98]'
-                  }`}
-                >
-                  <span>{plan.cta}</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </a>
-              </div>
+              {/* Action CTA Button */}
+              <a
+                href="https://github.com/samimcodes/ai-shield"
+                className={`w-full py-2.5 rounded-xl text-center text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${tier.buttonClass}`}
+              >
+                <span>{tier.cta}</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </a>
             </div>
           ))}
         </div>

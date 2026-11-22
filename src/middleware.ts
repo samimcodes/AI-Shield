@@ -29,11 +29,13 @@ import { PoisonEngine } from './core/poison.js';
 import { HoneypotManager } from './core/honeypot.js';
 import { TelemetryEmitter, hashClientIp } from './core/telemetry.js';
 import { DashboardManager } from './core/dashboard.js';
+import { SaasClient } from './core/saas.js';
 import {
   BotCategory,
   Confidence,
   type AiShieldOptions,
   type AiShieldRequestMeta,
+  type ApiKeyValidationResult,
   type DetectionResult,
 } from './types/index.js';
 
@@ -61,6 +63,7 @@ const DEFAULT_SCORE_THRESHOLD = 50;
 export interface AiShieldHandler extends RequestHandler {
   telemetry?: TelemetryEmitter | undefined;
   dashboard?: DashboardManager | undefined;
+  saas?: SaasClient | undefined;
 }
 
 /**
@@ -99,6 +102,15 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
     apiKey !== undefined
       ? new TelemetryEmitter({ apiKey, dashboardUrl })
       : undefined;
+
+  // Open-Core Multi-tenant SaaS client (sub-2ms caching + tier capability checks)
+  const saasClient = new SaasClient({
+    apiKey,
+    validationUrl: options.validationUrl,
+    cacheTtlMs: options.validationCacheTtlMs,
+    fallbackPlan: options.fallbackPlan,
+    debug,
+  });
 
   // Optional live security dashboard
   const dashboard = enableDashboard
@@ -141,6 +153,14 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
           userAgent: ua,
         });
       }
+
+      // Asynchronously log honeypot trap to SaaS backend
+      saasClient.reportBotEvent({
+        apiKey,
+        botName: `HoneypotTrap:${route.label}`,
+        path: route.path,
+        actionTaken: 'POISONED',
+      });
 
       // Synthesise a DetectionResult so the user callback receives
       // a consistent shape regardless of trigger source.
@@ -186,124 +206,188 @@ export function createAiShield(options: AiShieldOptions = {}): AiShieldHandler {
     // 2. Run honeypot router first — if a trap matches it sends the
     //    poison response directly and never calls next().
     honeypotRouter(req, res, () => {
-      // ── 3. Resolve client IP ─────────────────────────────────────────
-      const clientIp = req.ip ?? req.socket.remoteAddress ?? '';
+      const handleWithValidation = (validation: ApiKeyValidationResult) => {
+        // ── 3. Resolve client IP ─────────────────────────────────────────
+        const clientIp = req.ip ?? req.socket.remoteAddress ?? '';
 
-      // ── 4. Check honeypot IP cache ───────────────────────────────────
-      const isHoneypotFlagged = honeypot.ipCache.isFlagged(clientIp);
+        // ── 4. Check honeypot IP cache ───────────────────────────────────
+        const isHoneypotFlagged = honeypot.ipCache.isFlagged(clientIp);
 
-      // ── 5. Run multi-signal detector ─────────────────────────────────
-      const detection: DetectionResult = detector.detect(
-        req.headers,
-        isHoneypotFlagged,
-      );
-
-      // ── 6. Attach metadata (always, even for pass-through) ───────────
-      const meta: AiShieldRequestMeta = { detection, poisoned: false };
-      (req as Request & { aiShield: AiShieldRequestMeta }).aiShield = meta;
-
-      // ── 7. GOOD_BOT — always pass through (SEO safety) ───────────────
-      if (detection.category === BotCategory.GOOD_BOT) {
-        dashboard?.recordGoodBot(detection.label, req.path);
-        if (debug) {
-          console.info(
-            `[ai-shield] Good bot allowed: ${detection.label} | ${req.method} ${req.path}`,
-          );
-        }
-        next();
-        return;
-      }
-
-      // ── 8. Score gate — below threshold → pass through ───────────────
-      if (detection.score < scoreThreshold && !isHoneypotFlagged) {
-        dashboard?.recordRequest();
-        if (debug && detection.score > 0) {
-          console.info(
-            `[ai-shield] Below threshold (${detection.score} < ${scoreThreshold}): ${detection.label} | ${req.path}`,
-          );
-        }
-        next();
-        return;
-      }
-
-      // ── 9. Bot confirmed — serve poison ───────────────────────────────
-      if (debug) {
-        console.warn(
-          `[ai-shield] Intercepted: ${detection.label} (${detection.category})` +
-          ` score=${detection.score} | ${req.method} ${req.path}` +
-          ` | signals: [${detection.signals.join(', ')}]`,
+        // ── 5. Run multi-signal detector ─────────────────────────────────
+        const detection: DetectionResult = detector.detect(
+          req.headers,
+          isHoneypotFlagged,
         );
-      }
 
-      // Emit non-blocking telemetry event if configured
-      if (telemetry !== undefined) {
-        telemetry.emit({
-          timestamp: new Date().toISOString(),
-          path: req.path,
-          reason: detection.label,
-          clientIpHash: hashClientIp(clientIp),
-          userAgent: (req.headers['user-agent'] as string | undefined) ?? '',
-        });
-      }
+        // ── 6. Attach metadata (always, even for pass-through) ───────────
+        const meta: AiShieldRequestMeta = {
+          detection,
+          poisoned: false,
+          saas: {
+            plan: validation.plan,
+            apiKeyValid: validation.valid,
+            limitExceeded: validation.limitExceeded,
+            dynamicPoisoning: validation.dynamicPoisoning,
+          },
+        };
+        (req as Request & { aiShield: AiShieldRequestMeta }).aiShield = meta;
 
-      // Fire user callback (fire-and-forget; errors swallowed)
-      if (onBotDetected !== undefined) {
-        try { onBotDetected(detection); } catch { /* swallow */ }
-      }
+        // ── 7. GOOD_BOT — always pass through (SEO safety) ───────────────
+        if (detection.category === BotCategory.GOOD_BOT) {
+          dashboard?.recordGoodBot(detection.label, req.path);
+          if (debug) {
+            console.info(
+              `[ai-shield] Good bot allowed: ${detection.label} | ${req.method} ${req.path}`,
+            );
+          }
+          next();
+          return;
+        }
 
-      // ── 10. Content-type negotiation ──────────────────────────────────
-      const accept = (req.headers['accept'] as string | undefined) ?? '';
-      let effectiveType = poisonContentType;
-      if (req.path.endsWith('.xml') || accept.includes('application/xml')) {
-        effectiveType = 'SITEMAP';
-      } else if (accept.includes('application/json') && poisonContentType === 'HTML') {
-        effectiveType = 'JSON';
-      }
+        // ── 8. Score gate — below threshold → pass through ───────────────
+        if (detection.score < scoreThreshold && !isHoneypotFlagged) {
+          dashboard?.recordRequest();
+          if (debug && detection.score > 0) {
+            console.info(
+              `[ai-shield] Below threshold (${detection.score} < ${scoreThreshold}): ${detection.label} | ${req.path}`,
+            );
+          }
+          next();
+          return;
+        }
 
-      // Record in live dashboard if enabled
-      if (dashboard !== undefined) {
-        dashboard.recordEvent({
+        // ── 8b. SaaS Tier Capability Gate ────────────────────────────────
+        // When an API key is configured:
+        // Free tier: ONLY intercepts GPTBot (basic protection).
+        // Pro / Business tier: Intercepts all AI bots (ClaudeBot, Perplexity, ByteDance, Meta...).
+        if (!isHoneypotFlagged && apiKey !== undefined) {
+          const isCovered = saasClient.isBotCoveredByPlan(
+            detection.matchedRule,
+            validation.plan,
+            validation.allowedBots,
+            detection.score,
+          );
+
+          if (!isCovered) {
+            if (debug) {
+              console.info(
+                `[ai-shield:saas] Bot "${detection.label}" not covered under "${validation.plan}" plan; passing through.`,
+              );
+            }
+            next();
+            return;
+          }
+        }
+
+        // ── 9. Bot confirmed — serve poison ───────────────────────────────
+        if (debug) {
+          console.warn(
+            `[ai-shield] Intercepted: ${detection.label} (${detection.category})` +
+            ` score=${detection.score} | ${req.method} ${req.path}` +
+            ` | signals: [${detection.signals.join(', ')}]`,
+          );
+        }
+
+        // Emit non-blocking telemetry event if configured
+        if (telemetry !== undefined) {
+          telemetry.emit({
+            timestamp: new Date().toISOString(),
+            path: req.path,
+            reason: detection.label,
+            clientIpHash: hashClientIp(clientIp),
+            userAgent: (req.headers['user-agent'] as string | undefined) ?? '',
+          });
+        }
+
+        // Fire user callback (fire-and-forget; errors swallowed)
+        if (onBotDetected !== undefined) {
+          try { onBotDetected(detection); } catch { /* swallow */ }
+        }
+
+        // ── 10. Content-type negotiation ──────────────────────────────────
+        const accept = (req.headers['accept'] as string | undefined) ?? '';
+        let effectiveType = poisonContentType;
+        if (req.path.endsWith('.xml') || accept.includes('application/xml')) {
+          effectiveType = 'SITEMAP';
+        } else if (accept.includes('application/json') && poisonContentType === 'HTML') {
+          effectiveType = 'JSON';
+        }
+
+        // Record in live dashboard if enabled
+        if (dashboard !== undefined) {
+          dashboard.recordEvent({
+            botName: detection.label,
+            category: detection.category,
+            path: req.path,
+            score: detection.score,
+            signals: detection.signals,
+            ipHash: hashClientIp(clientIp),
+            userAgent: (req.headers['user-agent'] as string | undefined) ?? '',
+            action: effectiveType === 'JSON' ? 'POISON_JSON' : (effectiveType === 'SITEMAP' ? 'POISON_SITEMAP' : 'POISON_HTML'),
+          });
+        }
+
+        const payload = poisonEngine.generate(req.path, effectiveType);
+
+        // ── 11. Honeypot link injection ───────────────────────────────────
+        let responseBody = payload.body;
+        if (injectHoneypotLinks && effectiveType === 'HTML') {
+          // Use FNV-like XOR fold of path chars as seed
+          const seed = req.path
+            .split('')
+            .reduce((acc, c) => (acc ^ c.charCodeAt(0)) * 0x9e3779b9 >>> 0, 0x811c9dc5);
+          responseBody = honeypot.injectLinks(responseBody, seed);
+        }
+
+        // Asynchronously report bot event to SaaS backend (zero request latency)
+        saasClient.reportBotEvent({
+          apiKey,
           botName: detection.label,
-          category: detection.category,
           path: req.path,
-          score: detection.score,
-          signals: detection.signals,
-          ipHash: hashClientIp(clientIp),
-          userAgent: (req.headers['user-agent'] as string | undefined) ?? '',
-          action: effectiveType === 'JSON' ? 'POISON_JSON' : (effectiveType === 'SITEMAP' ? 'POISON_SITEMAP' : 'POISON_HTML'),
+          actionTaken: 'POISONED',
+          bandwidthSavedBytes: responseBody.length,
         });
-      }
 
-      const payload = poisonEngine.generate(req.path, effectiveType);
+        // ── 12. Mark as poisoned ──────────────────────────────────────────
+        (req as Request & { aiShield: AiShieldRequestMeta }).aiShield = {
+          detection,
+          poisoned: true,
+          saas: {
+            plan: validation.plan,
+            apiKeyValid: validation.valid,
+            limitExceeded: validation.limitExceeded,
+            dynamicPoisoning: validation.dynamicPoisoning,
+          },
+        };
 
-      // ── 11. Honeypot link injection ───────────────────────────────────
-      let responseBody = payload.body;
-      if (injectHoneypotLinks && effectiveType === 'HTML') {
-        // Use FNV-like XOR fold of path chars as seed
-        const seed = req.path
-          .split('')
-          .reduce((acc, c) => (acc ^ c.charCodeAt(0)) * 0x9e3779b9 >>> 0, 0x811c9dc5);
-        responseBody = honeypot.injectLinks(responseBody, seed);
-      }
-
-      // ── 12. Mark as poisoned ──────────────────────────────────────────
-      (req as Request & { aiShield: AiShieldRequestMeta }).aiShield = {
-        detection,
-        poisoned: true,
+        res
+          .status(payload.statusCode)
+          .setHeader('Content-Type', payload.contentType)
+          .setHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+          .setHeader('Pragma', 'no-cache')
+          .setHeader('X-Robots-Tag', 'noindex, nofollow')
+          .send(responseBody);
       };
 
-      res
-        .status(payload.statusCode)
-        .setHeader('Content-Type', payload.contentType)
-        .setHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
-        .setHeader('Pragma', 'no-cache')
-        .setHeader('X-Robots-Tag', 'noindex, nofollow')
-        .send(responseBody);
+      // Hot-path optimization: Check in-memory validation cache synchronously (< 0.05ms)
+      const cached = saasClient.getCachedValidation();
+      if (cached) {
+        handleWithValidation(cached);
+      } else {
+        // Cold start or cache miss: validate with offline fallback
+        saasClient
+          .validate()
+          .then(handleWithValidation)
+          .catch(() => {
+            handleWithValidation(saasClient.getDefaultFreeResult());
+          });
+      }
     });
   };
 
   shield.telemetry = telemetry;
   shield.dashboard = dashboard;
+  shield.saas = saasClient;
   return shield;
 }
 

@@ -87,6 +87,7 @@ export { PoisonEngine, syntheticTokenPublic } from './core/poison.js';
 export { HoneypotManager, IpTrapCache, CANONICAL_TRAP } from './core/honeypot.js';
 export { TelemetryEmitter, hashClientIp } from './core/telemetry.js';
 export { DashboardManager } from './core/dashboard.js';
+export { SaasClient, SAAS_TIER_LIMITS } from './core/saas.js';
 
 // ─── Types and Constants ───────────────────────────────────────────────────
 
@@ -106,6 +107,10 @@ export type {
   DashboardAuthConfig,
   DashboardSecurityEvent,
   DashboardStats,
+  SaasPlan,
+  ApiKeyValidationResult,
+  BotEventPayload,
+  SaasTierFeatures,
 } from './types/index.js';
 
 export {

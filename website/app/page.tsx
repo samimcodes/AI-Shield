@@ -1,22 +1,16 @@
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
-import Playground from '../components/Playground';
-import Features from '../components/Features';
-import Comparison from '../components/Comparison';
-import CodeIntegration from '../components/CodeIntegration';
+import SetupFlow from '../components/SetupFlow';
 import Pricing from '../components/Pricing';
 import Footer from '../components/Footer';
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#090d16] text-slate-100">
+    <div className="min-h-screen flex flex-col bg-[#09090b] text-zinc-100 selection:bg-cyan-500/20 selection:text-cyan-300">
       <Navbar />
       <main className="flex-1">
         <Hero />
-        <Playground />
-        <Features />
-        <Comparison />
-        <CodeIntegration />
+        <SetupFlow />
         <Pricing />
       </main>
       <Footer />

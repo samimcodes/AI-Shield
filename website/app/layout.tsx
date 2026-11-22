@@ -13,24 +13,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'AI-Shield | Stop AI Bots. Feed Them Poison Instead.',
+  title: 'AI-Shield | Stop AI Scrapers from Stealing Your Content. Automatically.',
   description:
-    'A drop-in middleware that serves synthetic garbage to scrapers with HTTP 200 OK, protecting your IP while keeping SEO untouched.',
+    'Block or poison unauthorized AI bots in under 2ms with a single line of code. Preserve SEO while keeping your proprietary data safe.',
   keywords: [
-    'ai crawler protection',
+    'ai scraper protection',
     'bot detection',
     'data poisoning',
     'anti-scraper',
     'gptbot blocker',
     'seo safe bot protection',
-    'nextjs middleware',
     'express middleware',
+    'nextjs middleware',
   ],
-  authors: [{ name: 'AI-Shield Security' }],
+  authors: [{ name: 'AI-Shield' }],
 };
 
 export const viewport = {
-  themeColor: '#090d16',
+  themeColor: '#09090b',
 };
 
 export default function RootLayout({
@@ -41,7 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[#090d16] text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[#09090b] text-zinc-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200`}
       >
         {children}
       </body>
