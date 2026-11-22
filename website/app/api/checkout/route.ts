@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createLemonSqueezyCheckout } from '@/lib/lemonsqueezy';
+import { createPolarCheckout } from '@/lib/polar';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
@@ -15,10 +15,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Resolve or fallback user credentials
-    let resolvedEmail = email || 'customer@example.com';
+    let resolvedEmail = email || 'founder@getaishield.dev';
     let resolvedUserId = userId || 'user_demo_123';
 
-    // If userId or email provided, attempt to lookup or upsert in database
     try {
       if (email) {
         const user = await prisma.user.upsert({
@@ -36,7 +35,7 @@ export async function POST(req: NextRequest) {
       // In offline/mock mode, continue with provided parameters
     }
 
-    const { checkoutUrl, isSimulated } = await createLemonSqueezyCheckout({
+    const { checkoutUrl, isSimulated } = await createPolarCheckout({
       userId: resolvedUserId,
       email: resolvedEmail,
       plan,

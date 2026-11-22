@@ -74,13 +74,7 @@ function SettingsContent() {
 
       const data = await res.json();
       if (data.checkoutUrl) {
-        // If Lemon Squeezy overlay script is loaded, open as modal
-        if (window.LemonSqueezy?.Url) {
-          window.LemonSqueezy.Url.Open(data.checkoutUrl);
-        } else {
-          // Fallback to direct window redirect
-          window.location.href = data.checkoutUrl;
-        }
+        window.location.href = data.checkoutUrl;
       }
     } catch (err) {
       console.error('Checkout error:', err);
@@ -90,8 +84,8 @@ function SettingsContent() {
   };
 
   const handleOpenCustomerPortal = () => {
-    // Direct link to Lemon Squeezy Customer Order & Subscription Portal
-    window.open('https://app.lemonsqueezy.com/my-orders', '_blank', 'noopener,noreferrer');
+    // Direct link to Polar.sh Customer Purchases & Subscription Portal
+    window.open('https://sandbox.polar.sh/purchases', '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -126,7 +120,7 @@ function SettingsContent() {
           Settings & Billing Management
         </h1>
         <p className="text-xs text-zinc-400 mt-1">
-          Manage your subscription tier, billing portal, and quota limits powered by Lemon Squeezy.
+          Manage your subscription tier, billing portal, and quota limits powered by Polar.sh.
         </p>
       </div>
 
@@ -185,7 +179,7 @@ function SettingsContent() {
           <div>
             <span className="text-zinc-500 font-mono text-[11px] uppercase">Payment Processor</span>
             <div className="text-zinc-200 font-medium mt-1">
-              Lemon Squeezy (Merchant of Record)
+              Polar.sh (Merchant of Record)
             </div>
           </div>
         </div>
@@ -197,7 +191,7 @@ function SettingsContent() {
           <div>
             <h2 className="text-lg font-bold text-white tracking-tight">Available Subscription Tiers</h2>
             <p className="text-xs text-zinc-400 mt-0.5">
-              Upgrades take effect instantly through seamless Lemon Squeezy Overlay Checkout.
+              Upgrades take effect instantly through secure Polar.sh checkout.
             </p>
           </div>
         </div>
