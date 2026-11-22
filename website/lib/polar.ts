@@ -38,6 +38,20 @@ export async function createPolarCheckout({
     };
   }
 
+  const isDummyEmail = !email || email.includes('example.com') || email.includes('getaishield.dev') || email.includes('test.com') || !email.includes('@');
+  const requestBody: any = {
+    products: [productId],
+    success_url: returnUrl,
+    metadata: {
+      userId,
+      plan,
+    },
+  };
+
+  if (!isDummyEmail) {
+    requestBody.customer_email = email;
+  }
+
   try {
     const res = await fetch(`${baseUrl}/v1/checkouts/custom/`, {
       method: 'POST',
@@ -45,25 +59,13 @@ export async function createPolarCheckout({
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        products: [productId],
-        customer_email: email,
-        success_url: returnUrl,
-        metadata: {
-          userId,
-          plan,
-        },
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const data = await res.json();
     if (!res.ok || !data.url) {
-      console.warn('[polar] Checkout session failed, returning direct fallback:', data);
-      const checkoutDomain = isSandbox ? 'https://sandbox.polar.sh' : 'https://polar.sh';
-      return {
-        checkoutUrl: `${checkoutDomain}/checkout/${productId}`,
-        isSimulated: false,
-      };
+      console.error('[polar] Checkout session failed:', data);
+      throw new Error(data.detail?.[0]?.msg || data.error || 'Failed to initialize Polar checkout session');
     }
 
     return {
@@ -72,10 +74,6 @@ export async function createPolarCheckout({
     };
   } catch (err: any) {
     console.error('[polar] Error creating checkout:', err.message);
-    const checkoutDomain = isSandbox ? 'https://sandbox.polar.sh' : 'https://polar.sh';
-    return {
-      checkoutUrl: `${checkoutDomain}/checkout/${productId}`,
-      isSimulated: false,
-    };
+    throw err;
   }
 }

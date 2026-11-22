@@ -67,7 +67,7 @@ function SettingsContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           plan,
-          email: 'demo@example.com',
+          email: 'mdsamimhossen827@gmail.com',
           userId: 'user_live_demo',
         }),
       });
