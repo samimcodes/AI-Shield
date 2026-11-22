@@ -18,6 +18,7 @@ export default function Pricing() {
       ],
       cta: 'Start Free',
       popular: false,
+      href: '/dashboard',
       buttonClass:
         'bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 hover:border-white/20',
     },
@@ -34,6 +35,7 @@ export default function Pricing() {
       ],
       cta: 'Upgrade to Pro',
       popular: true,
+      href: '/dashboard/settings',
       buttonClass:
         'bg-[#06B6D4] hover:bg-cyan-400 text-zinc-950 font-semibold shadow-lg shadow-cyan-500/25',
     },
@@ -48,8 +50,9 @@ export default function Pricing() {
         '99.99% uptime SLA guarantee',
         'Dedicated security architect & priority support',
       ],
-      cta: 'Contact Sales',
+      cta: 'Get Business',
       popular: false,
+      href: '/dashboard/settings',
       buttonClass:
         'bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 hover:border-white/20',
     },
@@ -130,7 +133,7 @@ export default function Pricing() {
 
               {/* Action CTA Button */}
               <a
-                href="https://github.com/samimcodes/ai-shield"
+                href={tier.href || '/dashboard'}
                 className={`w-full py-2.5 rounded-xl text-center text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${tier.buttonClass}`}
               >
                 <span>{tier.cta}</span>

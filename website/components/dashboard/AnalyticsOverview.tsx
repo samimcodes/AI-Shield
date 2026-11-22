@@ -130,7 +130,7 @@ export default function AnalyticsOverview({
 
           {percentUsed >= 80 && (
             <Link
-              href="/#pricing"
+              href="/dashboard/settings"
               className="inline-flex items-center justify-between text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#06B6D4]/15 hover:bg-[#06B6D4]/25 text-[#06B6D4] border border-[#06B6D4]/30 transition-colors"
             >
               <span>Quota alert: Upgrade to Pro</span>

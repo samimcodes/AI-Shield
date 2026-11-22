@@ -49,7 +49,7 @@ export default function DashboardHeader({
 
           {percentUsed >= 80 && (
             <Link
-              href="/#pricing"
+              href="/dashboard/settings"
               className="inline-flex items-center gap-1.5 rounded-lg bg-[#06B6D4] hover:bg-cyan-400 text-zinc-950 font-semibold px-3.5 py-1.5 text-xs shadow-sm shadow-cyan-500/25 transition-all"
             >
               <Zap className="h-3.5 w-3.5 fill-current" />

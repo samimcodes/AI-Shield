@@ -67,12 +67,12 @@ export default function TermsPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white">4. Subscriptions, Payments & Merchant of Record</h2>
             <p>
-              Our order process and recurring billing are conducted by our Merchant of Record, <strong>Lemon Squeezy</strong> (Lemon Squeezy LLC). Lemon Squeezy provides customer service inquiries and handles all payment processing, currency conversion, VAT, and sales tax compliance.
+              Our order process and recurring billing are conducted by our Merchant of Record, <strong>Polar.sh</strong> (Polar Software Inc.). Polar provides customer service inquiries and handles all payment processing, currency conversion, VAT, and sales tax compliance.
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-zinc-400">
               <li><strong>Billing Cycle:</strong> Subscriptions are billed on a recurring monthly or annual basis unless cancelled prior to the renewal date.</li>
               <li><strong>Plan Upgrades:</strong> Upgrades take effect immediately, unlocking higher request limits and advanced features (such as dynamic data poisoning).</li>
-              <li><strong>Cancellation:</strong> You may cancel your subscription at any time via the Lemon Squeezy Customer Portal accessible directly inside your Dashboard Settings.</li>
+              <li><strong>Cancellation:</strong> You may cancel your subscription at any time via the Polar.sh Customer Portal accessible directly inside your Dashboard Settings.</li>
             </ul>
           </section>
 

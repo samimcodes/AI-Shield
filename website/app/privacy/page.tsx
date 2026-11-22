@@ -77,7 +77,7 @@ export default function PrivacyPage() {
             <p>We believe in radical data minimization. We only collect the minimal technical data required to authenticate subscriptions and prevent bot attacks:</p>
             <ul className="list-disc pl-5 space-y-2 text-zinc-400">
               <li>
-                <strong>Customer Account Information:</strong> When you sign up or subscribe, we receive your email address and name. Payment details (credit cards, billing addresses) are handled exclusively by Lemon Squeezy; we never see or store your full card details.
+                <strong>Customer Account Information:</strong> When you sign up or subscribe, we receive your email address and name. Payment details (credit cards, billing addresses) are handled exclusively by Polar.sh; we never see or store your full card details.
               </li>
               <li>
                 <strong>API Keys & Usage Counters:</strong> We store your randomly generated API keys (<code className="text-zinc-200">as_live_...</code>), associated plan tier, and monthly validation request count.
@@ -96,9 +96,9 @@ export default function PrivacyPage() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-bold text-white">4. Payment Processing with Lemon Squeezy</h2>
+            <h2 className="text-lg font-bold text-white">4. Payment Processing with Polar.sh</h2>
             <p>
-              All customer transactions are processed through <strong>Lemon Squeezy LLC</strong>, acting as our Merchant of Record. Lemon Squeezy adheres to PCI-DSS Level 1 compliance standards. Please refer to <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noreferrer" className="text-[#06B6D4] hover:underline">Lemon Squeezy Privacy Policy</a> for full details on transaction data handling.
+              All customer transactions are processed through <strong>Polar Software Inc. (Polar.sh)</strong>, acting as our Merchant of Record. Polar adheres to PCI-DSS Level 1 compliance standards. Please refer to <a href="https://polar.sh/legal/privacy" target="_blank" rel="noreferrer" className="text-[#06B6D4] hover:underline">Polar.sh Privacy Policy</a> for full details on transaction data handling.
             </p>
           </section>
 

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
 import { useSearchParams } from 'next/navigation';
 import {
   Shield,
@@ -16,19 +15,6 @@ import {
   CheckCircle2,
   Loader2,
 } from 'lucide-react';
-
-declare global {
-  interface Window {
-    createLemonSqueezy?: () => void;
-    LemonSqueezy?: {
-      Url: {
-        Open: (url: string) => void;
-        Close: () => void;
-      };
-      Setup: (options: { eventHandler: (event: any) => void }) => void;
-    };
-  }
-}
 
 function SettingsContent() {
   const searchParams = useSearchParams();
@@ -51,13 +37,6 @@ function SettingsContent() {
       }
     }
   }, [checkoutStatus, planQuery]);
-
-  // Initialize Lemon Squeezy Overlay
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.createLemonSqueezy) {
-      window.createLemonSqueezy();
-    }
-  }, []);
 
   const handleUpgrade = async (plan: 'PRO' | 'BUSINESS') => {
     setLoadingPlan(plan);
@@ -325,17 +304,6 @@ function SettingsContent() {
 export default function SettingsBillingPage() {
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 selection:bg-cyan-500/20 selection:text-cyan-300">
-      {/* Load Lemon Squeezy Overlay JS SDK */}
-      <Script
-        src="https://assets.lemonsqueezy.com/lemon.js"
-        strategy="lazyOnload"
-        onLoad={() => {
-          if (window.createLemonSqueezy) {
-            window.createLemonSqueezy();
-          }
-        }}
-      />
-
       {/* Header */}
       <header className="border-b border-white/10 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-40">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 h-16 flex items-center justify-between">

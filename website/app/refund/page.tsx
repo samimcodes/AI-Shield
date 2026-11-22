@@ -71,7 +71,7 @@ export default function RefundPage() {
                 <strong>Direct Email:</strong> Email <a href="mailto:support@getaishield.dev" className="text-[#06B6D4] hover:underline">support@getaishield.dev</a> with your account email address and order number. Our support team typically responds within 24 business hours.
               </li>
               <li>
-                <strong>Lemon Squeezy Order Receipt:</strong> Click &quot;Manage Orders&quot; on your official Lemon Squeezy receipt email or access <a href="https://app.lemonsqueezy.com/my-orders" target="_blank" rel="noreferrer" className="text-[#06B6D4] hover:underline">app.lemonsqueezy.com/my-orders</a> to submit a dispute or refund request directly.
+                <strong>Polar.sh Order Receipt:</strong> Click &quot;Manage Orders&quot; on your official Polar receipt email or access <a href="https://sandbox.polar.sh/purchases" target="_blank" rel="noreferrer" className="text-[#06B6D4] hover:underline">sandbox.polar.sh/purchases</a> to submit a dispute or refund request directly.
               </li>
             </ul>
           </section>
@@ -79,7 +79,7 @@ export default function RefundPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white">3. Processing Time</h2>
             <p>
-              Once approved, refunds are credited back to your original payment method (Credit Card, Debit Card, or PayPal) via Lemon Squeezy within <strong>3 to 5 business days</strong>, depending on your card issuer or banking institution.
+              Once approved, refunds are credited back to your original payment method (Credit Card, Debit Card, or PayPal) via Polar.sh within <strong>3 to 5 business days</strong>, depending on your card issuer or banking institution.
             </p>
           </section>
 
