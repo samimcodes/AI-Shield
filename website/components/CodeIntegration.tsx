@@ -85,7 +85,7 @@ await fastify.listen({ port: 3000 });`,
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Drop-in Integration in Under 3 Minutes
           </h2>
-          <p className="mt-3 text-slate-300 text-base sm:text-lg">
+          <p className="mt-3 text-zinc-300 text-base sm:text-lg">
             Run <code className="text-cyan-400 font-mono text-sm px-2 py-0.5 rounded bg-white/5">npx @samimcodes/ai-shield init</code> for automatic zero-code setup, or paste the 3-line drop-in middleware below.
           </p>
         </div>
@@ -93,14 +93,14 @@ await fastify.listen({ port: 3000 });`,
         {/* Code Box Container */}
         <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#0b101d] shadow-2xl overflow-hidden backdrop-blur-xl">
           {/* Tabs Header */}
-          <div className="flex flex-wrap items-center justify-between border-b border-white/10 bg-slate-900/80 px-4 py-3 gap-3">
+          <div className="flex flex-wrap items-center justify-between border-b border-white/10 bg-zinc-900/80 px-4 py-3 gap-3">
             <div className="flex gap-2">
               <button
                 onClick={() => setActiveTab('express')}
                 className={`rounded-lg px-3.5 py-1.5 text-xs font-mono font-medium transition-all ${
                   activeTab === 'express'
                     ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 Express.js (Node.js)
@@ -110,7 +110,7 @@ await fastify.listen({ port: 3000 });`,
                 className={`rounded-lg px-3.5 py-1.5 text-xs font-mono font-medium transition-all ${
                   activeTab === 'nextjs'
                     ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 Next.js (App Router / Edge)
@@ -120,7 +120,7 @@ await fastify.listen({ port: 3000 });`,
                 className={`rounded-lg px-3.5 py-1.5 text-xs font-mono font-medium transition-all ${
                   activeTab === 'fastify'
                     ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 Fastify
@@ -129,7 +129,7 @@ await fastify.listen({ port: 3000 });`,
 
             <button
               onClick={copyCode}
-              className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-mono text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-mono text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
             >
               {copied ? (
                 <>
@@ -146,14 +146,14 @@ await fastify.listen({ port: 3000 });`,
           </div>
 
           {/* Code Window */}
-          <div className="p-6 font-mono text-xs sm:text-sm overflow-x-auto leading-relaxed bg-black/60 text-slate-200">
+          <div className="p-6 font-mono text-xs sm:text-sm overflow-x-auto leading-relaxed bg-black/60 text-zinc-200">
             <pre className="text-cyan-100 font-mono">
               <code>{snippets[activeTab]}</code>
             </pre>
           </div>
 
           {/* Quick highlight bar */}
-          <div className="flex items-center justify-between border-t border-white/10 bg-slate-900/60 px-6 py-3 text-xs text-slate-400">
+          <div className="flex items-center justify-between border-t border-white/10 bg-zinc-900/60 px-6 py-3 text-xs text-zinc-400">
             <span className="flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
               TypeScript strict mode ESM & CJS dual exports ready

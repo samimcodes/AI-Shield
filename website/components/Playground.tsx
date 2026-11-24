@@ -212,7 +212,7 @@ export default function Playground() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             See AI-Shield in Action
           </h2>
-          <p className="mt-3 text-slate-300 text-base sm:text-lg">
+          <p className="mt-3 text-zinc-300 text-base sm:text-lg">
             Switch between real users, search engine crawlers, and AI scraping bots. Watch how our
             middleware responds with HTTP 200 OK while swapping real data with convincing synthetic poison.
           </p>
@@ -227,7 +227,7 @@ export default function Playground() {
               <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
               <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
               <span className="text-xs font-mono text-zinc-400 ml-2 font-semibold">
-                ai-shield-sandbox-v0.1.0
+                ai-shield-sandbox-v0.3.3
               </span>
             </div>
 
@@ -280,13 +280,13 @@ export default function Playground() {
                         onClick={() => handleSimulate(key)}
                         className={`w-full text-left rounded-xl p-3.5 transition-all flex items-start gap-3.5 border ${
                           isSelected
-                            ? 'bg-slate-800/80 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
+                            ? 'bg-zinc-800/80 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
                             : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-white/10'
                         }`}
                       >
                         <div
                           className={`p-2 rounded-lg mt-0.5 ${
-                            isSelected ? 'bg-cyan-500/20 text-cyan-300' : 'bg-white/5 text-slate-400'
+                            isSelected ? 'bg-cyan-500/20 text-cyan-300' : 'bg-white/5 text-zinc-400'
                           }`}
                         >
                           <Icon className="h-5 w-5" />
@@ -301,7 +301,7 @@ export default function Playground() {
                               {p.isBot ? 'Intercepted' : 'Passed Through'}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-400 mt-0.5 truncate">{p.category}</p>
+                          <p className="text-xs text-zinc-400 mt-0.5 truncate">{p.category}</p>
                         </div>
                       </button>
                     );
@@ -309,24 +309,24 @@ export default function Playground() {
                 </div>
 
                 {/* Client Inspector Box */}
-                <div className="mt-6 rounded-xl border border-white/5 bg-slate-900/60 p-4">
-                  <div className="text-[11px] font-mono uppercase text-slate-400 font-semibold mb-2">
+                <div className="mt-6 rounded-xl border border-white/5 bg-zinc-900/60 p-4">
+                  <div className="text-[11px] font-mono uppercase text-zinc-400 font-semibold mb-2">
                     Active Client Headers
                   </div>
                   <div className="space-y-2 font-mono text-xs">
                     <div>
-                      <span className="text-slate-500">User-Agent:</span>
-                      <p className="text-slate-300 break-all bg-black/30 p-1.5 rounded mt-0.5 text-[11px]">
+                      <span className="text-zinc-500">User-Agent:</span>
+                      <p className="text-zinc-300 break-all bg-black/30 p-1.5 rounded mt-0.5 text-[11px]">
                         {persona.userAgent}
                       </p>
                     </div>
                     <div className="grid grid-cols-2 gap-2 pt-1 text-[11px]">
                       <div>
-                        <span className="text-slate-500">Client Category:</span>
+                        <span className="text-zinc-500">Client Category:</span>
                         <p className="text-cyan-400 font-semibold">{persona.category}</p>
                       </div>
                       <div>
-                        <span className="text-slate-500">Threat Score:</span>
+                        <span className="text-zinc-500">Threat Score:</span>
                         <p className={persona.score > 50 ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold'}>
                           {persona.score} / 100
                         </p>
@@ -340,7 +340,7 @@ export default function Playground() {
               <div className="mt-6 pt-4 border-t border-white/5">
                 <button
                   onClick={() => handleSimulate(selectedPersonaKey)}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 py-2.5 text-xs font-bold text-slate-950 hover:brightness-110 active:scale-[0.99] transition-all"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 py-2.5 text-xs font-bold text-zinc-950 hover:brightness-110 active:scale-[0.99] transition-all"
                 >
                   <Play className="h-3.5 w-3.5 fill-current" />
                   <span>Re-run Request Simulation</span>
@@ -349,7 +349,7 @@ export default function Playground() {
             </div>
 
             {/* RIGHT PANEL: Live Response Terminal (7 Cols) */}
-            <div className="lg:col-span-7 bg-[#080d19] p-5 sm:p-6 flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-[#09090b] p-5 sm:p-6 flex flex-col justify-between">
               <div>
                 {/* Response Status Bar */}
                 <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/10">
@@ -358,7 +358,7 @@ export default function Playground() {
                       <CheckCircle2 className="h-3.5 w-3.5" />
                       <span>200 OK</span>
                     </div>
-                    <span className="text-xs font-mono text-slate-400">
+                    <span className="text-xs font-mono text-zinc-400">
                       Latency: <strong className="text-cyan-300 font-semibold">&lt; 1.2ms</strong>
                     </span>
                   </div>
@@ -385,7 +385,7 @@ export default function Playground() {
                       className={`text-xs font-mono px-3 py-1.5 rounded-lg transition-colors ${
                         activeTab === 'body'
                           ? 'bg-white/10 text-cyan-300 font-semibold'
-                          : 'text-slate-400 hover:text-white'
+                          : 'text-zinc-400 hover:text-white'
                       }`}
                     >
                       Response Payload (JSON)
@@ -395,7 +395,7 @@ export default function Playground() {
                       className={`text-xs font-mono px-3 py-1.5 rounded-lg transition-colors ${
                         activeTab === 'headers'
                           ? 'bg-white/10 text-cyan-300 font-semibold'
-                          : 'text-slate-400 hover:text-white'
+                          : 'text-zinc-400 hover:text-white'
                       }`}
                     >
                       Response Headers
@@ -405,7 +405,7 @@ export default function Playground() {
                       className={`text-xs font-mono px-3 py-1.5 rounded-lg transition-colors ${
                         activeTab === 'signals'
                           ? 'bg-white/10 text-cyan-300 font-semibold'
-                          : 'text-slate-400 hover:text-white'
+                          : 'text-zinc-400 hover:text-white'
                       }`}
                     >
                       Shield Signals
@@ -414,7 +414,7 @@ export default function Playground() {
 
                   <button
                     onClick={copyPayload}
-                    className="flex items-center gap-1 text-[11px] font-mono text-slate-400 hover:text-cyan-300 transition-colors"
+                    className="flex items-center gap-1 text-[11px] font-mono text-zinc-400 hover:text-cyan-300 transition-colors"
                   >
                     {copied ? (
                       <>
@@ -433,18 +433,18 @@ export default function Playground() {
                 {/* Response Terminal Content */}
                 <div className="relative rounded-xl border border-white/10 bg-black/60 p-4 font-mono text-xs overflow-auto max-h-[380px]">
                   {isSimulating ? (
-                    <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-400">
+                    <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-400">
                       <RotateCw className="h-6 w-6 animate-spin text-cyan-400" />
                       <span>Executing Bot Detector...</span>
                     </div>
                   ) : activeTab === 'body' ? (
-                    <pre className="text-slate-200 leading-relaxed overflow-x-auto whitespace-pre-wrap">
+                    <pre className="text-zinc-200 leading-relaxed overflow-x-auto whitespace-pre-wrap">
                       {JSON.stringify(currentPayload, null, 2)}
                     </pre>
                   ) : activeTab === 'headers' ? (
-                    <div className="space-y-1.5 text-slate-300 text-[11px]">
+                    <div className="space-y-1.5 text-zinc-300 text-[11px]">
                       <div>
-                        <span className="text-slate-500">HTTP/1.1</span>{' '}
+                        <span className="text-zinc-500">HTTP/1.1</span>{' '}
                         <span className="text-emerald-400 font-bold">200 OK</span>
                       </div>
                       <div>
