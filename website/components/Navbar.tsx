@@ -20,7 +20,7 @@ export default function Navbar() {
               AI-Shield
             </span>
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium font-mono bg-emerald-500/10 text-[#10B981] border border-emerald-500/20">
-              v0.3.2
+              v0.3.3
             </span>
           </div>
         </Link>
