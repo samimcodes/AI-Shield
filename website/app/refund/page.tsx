@@ -71,7 +71,7 @@ export default function RefundPage() {
                 <strong>Direct Email:</strong> Email <a href="mailto:support@getaishield.dev" className="text-[#06B6D4] hover:underline">support@getaishield.dev</a> with your account email address and order number. Our support team typically responds within 24 business hours.
               </li>
               <li>
-                <strong>Polar.sh Order Receipt:</strong> Click &quot;Manage Orders&quot; on your official Polar receipt email or access <a href="https://sandbox.polar.sh/purchases" target="_blank" rel="noreferrer" className="text-[#06B6D4] hover:underline">sandbox.polar.sh/purchases</a> to submit a dispute or refund request directly.
+                <strong>Polar.sh Customer Portal:</strong> Click &quot;Manage Orders&quot; on your official Polar receipt email or access the <a href="/api/portal" target="_blank" rel="noreferrer" className="text-[#06B6D4] hover:underline">Polar.sh Customer Portal</a> to submit a dispute or refund request directly.
               </li>
             </ul>
           </section>

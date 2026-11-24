@@ -64,7 +64,7 @@ function SettingsContent() {
 
   const handleOpenCustomerPortal = () => {
     // Direct link to Polar.sh Customer Purchases & Subscription Portal
-    window.open('https://sandbox.polar.sh/purchases', '_blank', 'noopener,noreferrer');
+    window.open('/api/portal', '_blank', 'noopener,noreferrer');
   };
 
   return (

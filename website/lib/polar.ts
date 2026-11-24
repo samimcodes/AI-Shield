@@ -77,3 +77,13 @@ export async function createPolarCheckout({
     throw err;
   }
 }
+
+/**
+ * Resolves the official Polar Customer Portal URL for the organization.
+ */
+export function getPolarPortalUrl(): string {
+  const isSandbox = process.env.POLAR_ENV !== 'production';
+  const orgSlug = process.env.POLAR_ORGANIZATION_SLUG || 'ai-shield';
+  const domain = isSandbox ? 'sandbox.polar.sh' : 'polar.sh';
+  return `https://${domain}/${orgSlug}/portal`;
+}
