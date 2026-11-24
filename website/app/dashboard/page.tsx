@@ -64,14 +64,25 @@ export default async function DashboardPage() {
   const requestsMax = tier.maxMonthlyRequests;
 
   const apiKeyIds = user?.apiKeys.map((k) => k.id) ?? [];
-  const rawLogs =
+  const [rawLogs, totalBotsBlocked, aggBandwidth] =
     apiKeyIds.length > 0
-      ? await prisma.botLog.findMany({
-          where: { apiKeyId: { in: apiKeyIds } },
-          orderBy: { timestamp: 'desc' },
-          take: 25,
-        })
-      : [];
+      ? await Promise.all([
+          prisma.botLog.findMany({
+            where: { apiKeyId: { in: apiKeyIds } },
+            orderBy: { timestamp: 'desc' },
+            take: 25,
+          }),
+          prisma.botLog.count({
+            where: { apiKeyId: { in: apiKeyIds } },
+          }),
+          prisma.botLog.aggregate({
+            where: { apiKeyId: { in: apiKeyIds } },
+            _sum: { bandwidthSavedBytes: true },
+          }),
+        ])
+      : [[], 0, { _sum: { bandwidthSavedBytes: null } }];
+
+  const bandwidthSavedBytes = Number(aggBandwidth._sum.bandwidthSavedBytes ?? 0);
 
   const initialEvents: BotEventItem[] = rawLogs.map((log) => ({
     id: log.id,
@@ -106,9 +117,11 @@ export default async function DashboardPage() {
           requestsUsed={requestsUsed}
           requestsMax={requestsMax}
           planName={planLabel}
+          totalBotsBlocked={totalBotsBlocked}
+          bandwidthSavedBytes={bandwidthSavedBytes}
         />
 
-        <BotActivityFeed initialEvents={initialEvents.length > 0 ? initialEvents : undefined} />
+        <BotActivityFeed initialEvents={initialEvents} apiKey={primaryKey} />
       </main>
 
       <footer className="border-t border-white/5 py-6 text-center text-xs text-zinc-600 font-mono">

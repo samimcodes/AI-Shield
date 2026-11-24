@@ -8,14 +8,22 @@ interface AnalyticsOverviewProps {
   requestsUsed?: number;
   requestsMax?: number;
   planName?: string;
+  totalBotsBlocked?: number;
+  bandwidthSavedBytes?: number;
 }
 
 export default function AnalyticsOverview({
-  requestsUsed = 4200,
+  requestsUsed = 0,
   requestsMax = 5000,
   planName = 'Free',
+  totalBotsBlocked = 0,
+  bandwidthSavedBytes = 0,
 }: AnalyticsOverviewProps) {
-  const percentUsed = Math.min(100, Math.round((requestsUsed / requestsMax) * 100));
+  const percentUsed = requestsMax > 0 ? Math.min(100, Math.round((requestsUsed / requestsMax) * 100)) : 0;
+  const formattedBandwidth =
+    bandwidthSavedBytes >= 1024 * 1024
+      ? `${(bandwidthSavedBytes / (1024 * 1024)).toFixed(2)} MB`
+      : `${(bandwidthSavedBytes / 1024).toFixed(1)} KB`;
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // 7-day simulated dataset
@@ -63,11 +71,11 @@ export default function AnalyticsOverview({
             </div>
           </div>
           <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            4,218
+            {totalBotsBlocked.toLocaleString()}
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-[#10B981] mt-2 font-medium">
             <TrendingUp className="h-3 w-3" />
-            <span>+24.8% vs last week</span>
+            <span>Live Neon PostgreSQL telemetry</span>
           </div>
         </div>
 
@@ -80,10 +88,10 @@ export default function AnalyticsOverview({
             </div>
           </div>
           <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            342.8 MB
+            {formattedBandwidth}
           </div>
           <div className="text-[11px] text-zinc-400 mt-2 font-mono">
-            ~14.8M scraper tokens defended
+            {requestsUsed.toLocaleString()} monthly validations
           </div>
         </div>
 

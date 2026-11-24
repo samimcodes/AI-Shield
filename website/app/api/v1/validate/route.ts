@@ -110,35 +110,33 @@ async function validateApiKey(req: NextRequest, isPost = false) {
     // If quota exceeded, gracefully degrade to FREE tier protections
     const activeTier = limitExceeded ? PLAN_CONFIGS.FREE : planConfig;
 
-    // 2. Asynchronous logging & usage increment (fire-and-forget, zero response latency)
-    void (async () => {
-      try {
-        const operations: any[] = [
-          prisma.apiKey.update({
-            where: { id: keyRecord.id },
-            data: { requestsThisMonth: { increment: 1 } },
-          }),
-        ];
+    // 2. Persist usage increment & bot event log reliably
+    try {
+      const operations: any[] = [
+        prisma.apiKey.update({
+          where: { id: keyRecord.id },
+          data: { requestsThisMonth: { increment: 1 } },
+        }),
+      ];
 
-        if (bodyData.botName && bodyData.path) {
-          operations.push(
-            prisma.botLog.create({
-              data: {
-                apiKeyId: keyRecord.id,
-                botName: String(bodyData.botName),
-                path: String(bodyData.path),
-                actionTaken: bodyData.actionTaken === 'BLOCKED' ? 'BLOCKED' : 'POISONED',
-                bandwidthSavedBytes: BigInt(bodyData.bandwidthSavedBytes ?? 0),
-              },
-            })
-          );
-        }
-
-        await prisma.$transaction(operations);
-      } catch (logErr) {
-        console.error('[ai-shield:validate] Non-blocking database update error:', logErr);
+      if (bodyData.botName && bodyData.path) {
+        operations.push(
+          prisma.botLog.create({
+            data: {
+              apiKeyId: keyRecord.id,
+              botName: String(bodyData.botName),
+              path: String(bodyData.path),
+              actionTaken: bodyData.actionTaken === 'BLOCKED' ? 'BLOCKED' : 'POISONED',
+              bandwidthSavedBytes: BigInt(bodyData.bandwidthSavedBytes ?? 0),
+            },
+          })
+        );
       }
-    })();
+
+      await prisma.$transaction(operations);
+    } catch (logErr) {
+      console.error('[ai-shield:validate] Database update error:', logErr);
+    }
 
     return NextResponse.json(
       {
@@ -149,9 +147,9 @@ async function validateApiKey(req: NextRequest, isPost = false) {
         dynamicPoisoning: activeTier.dynamicPoisoning,
         advancedBots: activeTier.advancedBots,
         limitExceeded,
-        requestsThisMonth: keyRecord.requestsThisMonth,
+        requestsThisMonth: currentRequestsThisMonth + 1,
         monthlyLimit: planConfig.maxMonthlyRequests,
-        remainingRequests,
+        remainingRequests: Math.max(0, remainingRequests - 1),
         tier: {
           name: planConfig.name,
           dynamicPoisoning: activeTier.dynamicPoisoning,

@@ -18,6 +18,16 @@ export default function Hero() {
   const [url, setUrl] = useState('');
   const [scanState, setScanState] = useState<'idle' | 'scanning' | 'completed'>('idle');
   const [scanStep, setScanStep] = useState(0);
+  const [scanResult, setScanResult] = useState<{
+    domain: string;
+    reachable: boolean;
+    robotsFound: boolean;
+    hasAiShield: boolean;
+    exposedBots: string[];
+    blockedInRobots: string[];
+    vulnerabilitiesCount: number;
+  } | null>(null);
+  const [scanError, setScanError] = useState('');
 
   const liveEvents = [
     { bot: 'GPTBot (OpenAI)', path: '/api/products', verdict: 'Poisoned (HTTP 200 OK)', latency: '1.2ms' },
@@ -38,30 +48,46 @@ export default function Hero() {
   const scanSteps = [
     'Probing robots.txt & AI crawler directives...',
     'Testing endpoint resistance to GPTBot, ClaudeBot & ByteSpider...',
-    'Analyzing sitemap & API schema leakage...',
+    'Analyzing HTTP headers & AI-Shield signatures...',
   ];
 
-  const handleStartScan = (e: React.FormEvent) => {
+  const handleStartScan = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url.trim()) return;
 
+    setScanError('');
+    setScanResult(null);
     setScanState('scanning');
     setScanStep(0);
+
+    const stepTimer1 = setTimeout(() => setScanStep(1), 700);
+    const stepTimer2 = setTimeout(() => setScanStep(2), 1400);
+
+    try {
+      const res = await fetch('/api/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+      const data = await res.json();
+      clearTimeout(stepTimer1);
+      clearTimeout(stepTimer2);
+
+      if (!res.ok) {
+        setScanError(data.error || 'Could not scan domain.');
+        setScanState('idle');
+        return;
+      }
+
+      setScanResult(data);
+      setScanState('completed');
+    } catch {
+      clearTimeout(stepTimer1);
+      clearTimeout(stepTimer2);
+      setScanError('Network error while scanning target.');
+      setScanState('idle');
+    }
   };
-
-  useEffect(() => {
-    if (scanState !== 'scanning') return;
-
-    const timer1 = setTimeout(() => setScanStep(1), 1000);
-    const timer2 = setTimeout(() => setScanStep(2), 2000);
-    const timer3 = setTimeout(() => setScanState('completed'), 3000);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, [scanState]);
 
   const cleanDomain = url.trim().replace(/^https?:\/\//i, '').replace(/\/.*$/, '') || 'yourdomain.com';
 
@@ -182,6 +208,12 @@ export default function Hero() {
               </form>
             )}
 
+            {scanError && (
+              <div className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-xs text-red-300 text-left">
+                {scanError}
+              </div>
+            )}
+
             {/* Step animation during scan */}
             {scanState === 'scanning' && (
               <div className="mt-5 space-y-3 pt-4 border-t border-white/5">
@@ -199,46 +231,63 @@ export default function Hero() {
             )}
 
             {/* Completed Scan Results */}
-            {scanState === 'completed' && (
+            {scanState === 'completed' && scanResult && (
               <div className="space-y-4 pt-1">
                 {/* Result Summary Banner */}
-                <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-sm font-semibold text-amber-200">
-                      3 AI Scraper Vulnerabilities Exposed for {cleanDomain}
-                    </h4>
-                    <p className="text-xs text-amber-300/80 mt-0.5 leading-relaxed">
-                      Your robots.txt and headers do not protect against recursive LLM scrapers.
-                    </p>
+                {scanResult.hasAiShield ? (
+                  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-sm font-semibold text-emerald-200">
+                        {scanResult.domain} is Protected by AI-Shield
+                      </h4>
+                      <p className="text-xs text-emerald-300/80 mt-0.5 leading-relaxed">
+                        Active AI-Shield defense headers detected on this endpoint.
+                      </p>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-sm font-semibold text-amber-200">
+                        {scanResult.vulnerabilitiesCount} AI Scraper Exposures Found on {scanResult.domain}
+                      </h4>
+                      <p className="text-xs text-amber-300/80 mt-0.5 leading-relaxed">
+                        {scanResult.robotsFound
+                          ? `robots.txt found, but ${scanResult.exposedBots.length} major AI crawlers are not actively poisoned.`
+                          : 'No robots.txt directives or active AI-Shield poisoning headers detected.'}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 {/* Scraper Breakdown Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <div className="p-3 rounded-lg border border-white/5 bg-zinc-950/60">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">GPTBot</span>
-                      <span className="text-[10px] text-red-400 font-mono">Vulnerable</span>
-                    </div>
-                    <p className="text-[11px] text-zinc-400 mt-1">Full content extraction enabled</p>
-                  </div>
-
-                  <div className="p-3 rounded-lg border border-white/5 bg-zinc-950/60">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">ByteSpider</span>
-                      <span className="text-[10px] text-red-400 font-mono">Vulnerable</span>
-                    </div>
-                    <p className="text-[11px] text-zinc-400 mt-1">High-frequency scraping unthrottled</p>
-                  </div>
-
-                  <div className="p-3 rounded-lg border border-white/5 bg-zinc-950/60">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-white">ClaudeBot</span>
-                      <span className="text-[10px] text-red-400 font-mono">Vulnerable</span>
-                    </div>
-                    <p className="text-[11px] text-zinc-400 mt-1">Automated knowledge ingestion</p>
-                  </div>
+                  {['GPTBot', 'ByteSpider', 'ClaudeBot'].map((bot) => {
+                    const isBlocked =
+                      scanResult.hasAiShield ||
+                      scanResult.blockedInRobots.includes(bot);
+                    return (
+                      <div key={bot} className="p-3 rounded-lg border border-white/5 bg-zinc-950/60">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-white">{bot}</span>
+                          <span
+                            className={`text-[10px] font-mono ${
+                              isBlocked ? 'text-emerald-400' : 'text-red-400'
+                            }`}
+                          >
+                            {isBlocked ? 'Mitigated' : 'Exposed'}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-zinc-400 mt-1">
+                          {isBlocked
+                            ? 'Protected against unauthorized ingestion'
+                            : 'Active stealth poisoning recommended'}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Mitigation & Action */}

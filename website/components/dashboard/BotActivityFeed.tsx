@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Radio, Sparkles, Filter, RefreshCw, Zap } from 'lucide-react';
 
 export interface BotEventItem {
@@ -15,66 +16,20 @@ export interface BotEventItem {
 }
 
 export default function BotActivityFeed({
-  initialEvents,
+  initialEvents = [],
+  apiKey,
 }: {
   initialEvents?: BotEventItem[];
+  apiKey?: string;
 }) {
+  const router = useRouter();
   const [selectedBotFilter, setSelectedBotFilter] = useState<string>('ALL');
+  const [simulating, setSimulating] = useState(false);
 
-  const [events, setEvents] = useState<BotEventItem[]>(initialEvents ?? [
-    {
-      id: 'evt-1',
-      botName: 'GPTBot / 1.0',
-      category: 'OpenAI Training Crawler',
-      url: '/api/v1/products',
-      status: '200 POISONED',
-      bandwidth: '18.4 KB',
-      timestamp: 'Just now',
-      badgeColor: 'text-[#10B981] bg-emerald-500/10 border-emerald-500/20',
-    },
-    {
-      id: 'evt-2',
-      botName: 'Claude-Web',
-      category: 'Anthropic Knowledge Ingest',
-      url: '/blog/enterprise-ai-security',
-      status: '200 POISONED',
-      bandwidth: '34.2 KB',
-      timestamp: '42s ago',
-      badgeColor: 'text-[#10B981] bg-emerald-500/10 border-emerald-500/20',
-    },
-    {
-      id: 'evt-3',
-      botName: 'Honeypot Trap',
-      category: 'Unauthorized Scraper Trap',
-      url: '/api/internal/telemetry-sync',
-      status: '200 HONEYPOT TRAP',
-      bandwidth: '8.1 KB',
-      timestamp: '2m ago',
-      badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
-    },
-    {
-      id: 'evt-4',
-      botName: 'PerplexityBot',
-      category: 'Perplexity AI Search Crawler',
-      url: '/docs/api-reference',
-      status: '200 POISONED',
-      bandwidth: '12.8 KB',
-      timestamp: '5m ago',
-      badgeColor: 'text-[#10B981] bg-emerald-500/10 border-emerald-500/20',
-    },
-    {
-      id: 'evt-5',
-      botName: 'ByteSpider',
-      category: 'ByteDance Commercial Scraper',
-      url: '/catalog/pricing-data',
-      status: '200 POISONED',
-      bandwidth: '52.6 KB',
-      timestamp: '11m ago',
-      badgeColor: 'text-[#10B981] bg-emerald-500/10 border-emerald-500/20',
-    },
-  ]);
+  const [events, setEvents] = useState<BotEventItem[]>(initialEvents);
 
-  const handleSimulateAttack = () => {
+  const handleSimulateAttack = async () => {
+    setSimulating(true);
     const bots = [
       { name: 'GPTBot / 1.0', cat: 'OpenAI Training Crawler', path: '/api/v1/customers' },
       { name: 'ClaudeBot', cat: 'Anthropic Crawler', path: '/knowledge-base/docs' },
@@ -82,18 +37,42 @@ export default function BotActivityFeed({
       { name: 'ByteSpider', cat: 'ByteDance High-Volume', path: '/catalog/all' },
     ];
     const picked = bots[Math.floor(Math.random() * bots.length)];
-    const newEvent: BotEventItem = {
-      id: `evt-${Date.now()}`,
-      botName: picked.name,
-      category: picked.cat,
-      url: picked.path,
-      status: '200 POISONED',
-      bandwidth: `${(Math.random() * 40 + 5).toFixed(1)} KB`,
-      timestamp: 'Just now',
-      badgeColor: 'text-[#10B981] bg-emerald-500/10 border-emerald-500/20',
-    };
+    const bytes = Math.floor(Math.random() * 40000 + 5000);
 
-    setEvents((prev) => [newEvent, ...prev.slice(0, 19)]);
+    try {
+      if (apiKey) {
+        await fetch('/api/v1/validate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+          },
+          body: JSON.stringify({
+            apiKey,
+            botName: picked.name,
+            path: picked.path,
+            actionTaken: 'POISONED',
+            bandwidthSavedBytes: bytes,
+          }),
+        });
+      }
+
+      const newEvent: BotEventItem = {
+        id: `evt-${Date.now()}`,
+        botName: picked.name,
+        category: picked.cat,
+        url: picked.path,
+        status: '200 POISONED',
+        bandwidth: `${(bytes / 1024).toFixed(1)} KB`,
+        timestamp: 'Just now',
+        badgeColor: 'text-[#10B981] bg-emerald-500/10 border-emerald-500/20',
+      };
+
+      setEvents((prev) => [newEvent, ...prev.slice(0, 24)]);
+      router.refresh();
+    } finally {
+      setSimulating(false);
+    }
   };
 
   const filteredEvents =
@@ -139,10 +118,11 @@ export default function BotActivityFeed({
           <button
             type="button"
             onClick={handleSimulateAttack}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-[#06B6D4]/30 bg-[#06B6D4]/10 hover:bg-[#06B6D4]/20 text-[#06B6D4] px-3 py-1.5 text-xs font-semibold transition-all shrink-0 active:scale-95"
+            disabled={simulating}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[#06B6D4]/30 bg-[#06B6D4]/10 hover:bg-[#06B6D4]/20 text-[#06B6D4] px-3 py-1.5 text-xs font-semibold transition-all shrink-0 active:scale-95 disabled:opacity-50 cursor-pointer"
           >
             <Zap className="h-3.5 w-3.5 fill-current" />
-            <span>Simulate Hit</span>
+            <span>{simulating ? 'Sending...' : 'Simulate Hit'}</span>
           </button>
         </div>
       </div>
@@ -160,7 +140,14 @@ export default function BotActivityFeed({
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {filteredEvents.map((item) => (
+            {filteredEvents.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="py-10 text-center text-xs text-zinc-500 font-mono">
+                  No bot interceptions recorded yet. Click &ldquo;Simulate Hit&rdquo; or integrate your API key to see live events.
+                </td>
+              </tr>
+            ) : (
+              filteredEvents.map((item) => (
               <tr key={item.id} className="hover:bg-white/[0.02] transition-colors group">
                 {/* Bot Name */}
                 <td className="py-3.5 pr-4">
@@ -197,7 +184,8 @@ export default function BotActivityFeed({
                   {item.timestamp}
                 </td>
               </tr>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
       </div>

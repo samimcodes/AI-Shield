@@ -31,11 +31,17 @@ export default function OnboardingWizard({
   const [copiedCode, setCopiedCode] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [verifyError, setVerifyError] = useState('');
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const origin =
+    typeof window !== 'undefined' && window.location.origin
+      ? window.location.origin
+      : 'https://ai-shield-dev.vercel.app';
 
   const snippets = {
     website: `<!-- Place before </head> or </body> in WordPress, Webflow, Shopify, or plain HTML -->
-<script src="/api/shield.js?key=${apiKey}" async></script>`,
+<script src="${origin}/api/shield.js?key=${apiKey}" async></script>`,
     node: `// Express.js, Next.js (App Router / Pages), or Node.js server
 import { aiShield } from '@samimcodes/ai-shield';
 
@@ -68,6 +74,7 @@ export default {
 
   const handleVerify = async () => {
     setIsVerifying(true);
+    setVerifyError('');
     try {
       const res = await fetch('/api/v1/verify', {
         method: 'POST',
@@ -75,18 +82,14 @@ export default {
         body: JSON.stringify({ apiKey }),
       });
       const data = await res.json();
-      if (data.connected || res.ok) {
+      if (res.ok && data.connected) {
         setIsVerified(true);
         onVerified?.();
       } else {
-        // Fallback for simulation
-        setIsVerified(true);
-        onVerified?.();
+        setVerifyError(data.error || 'Verification failed. Check your API key.');
       }
     } catch {
-      // Simulate success in offline dev
-      setIsVerified(true);
-      onVerified?.();
+      setVerifyError('Network error while verifying API key.');
     } finally {
       setIsVerifying(false);
     }

@@ -1,10 +1,61 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Check, Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Check, Sparkles, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
 
 export default function Pricing() {
+  const router = useRouter();
   const [isAnnual, setIsAnnual] = useState(false);
+  const [user, setUser] = useState<{ id: string; email: string; plan: string } | null>(null);
+  const [loadingTier, setLoadingTier] = useState<'PRO' | 'BUSINESS' | null>(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.user) {
+          setUser(data.user);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handlePlanClick = async (tierName: string) => {
+    if (tierName === 'Free') {
+      router.push(user ? '/dashboard' : '/login');
+      return;
+    }
+
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    const plan = tierName === 'Business' ? 'BUSINESS' : 'PRO';
+    setLoadingTier(plan);
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan,
+          email: user.email,
+          userId: user.id,
+        }),
+      });
+      const data = await res.json();
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+        return;
+      }
+    } catch {
+      // Fallback to settings page
+    } finally {
+      setLoadingTier(null);
+    }
+    router.push('/dashboard/settings');
+  };
 
   const tiers = [
     {
@@ -173,13 +224,24 @@ export default function Pricing() {
               </div>
 
               {/* Action CTA Button */}
-              <a
-                href={tier.href || '/dashboard'}
-                className={`w-full py-2.5 rounded-xl text-center text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${tier.buttonClass}`}
+              <button
+                type="button"
+                onClick={() => handlePlanClick(tier.name)}
+                disabled={loadingTier !== null}
+                className={`w-full py-2.5 rounded-xl text-center text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer disabled:opacity-60 ${tier.buttonClass}`}
               >
-                <span>{tier.cta}</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </a>
+                {loadingTier === (tier.name === 'Business' ? 'BUSINESS' : 'PRO') ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <span>Connecting to Polar...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{tier.cta}</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </button>
             </div>
           ))}
         </div>
