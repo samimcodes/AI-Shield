@@ -67,19 +67,19 @@ export default function Navbar() {
 
         {/* Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href="/dashboard"
+          <Link
+            href="/login"
             className="px-3.5 py-1.5 text-sm font-medium text-zinc-300 hover:text-white transition-colors"
           >
             Log in
-          </a>
-          <a
+          </Link>
+          <Link
             href="/dashboard"
             className="inline-flex items-center gap-1.5 rounded-lg bg-[#06B6D4] hover:bg-cyan-400 text-zinc-950 font-semibold px-4 py-1.5 text-sm shadow-sm hover:shadow-cyan-500/25 transition-all"
           >
             <span>Start Free</span>
             <ArrowRight className="h-3.5 w-3.5" />
-          </a>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}

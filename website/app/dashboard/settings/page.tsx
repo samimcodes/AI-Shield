@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import {
   Shield,
   ArrowLeft,
@@ -17,15 +17,53 @@ import {
 } from 'lucide-react';
 
 function SettingsContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const checkoutStatus = searchParams.get('checkout');
   const planQuery = searchParams.get('plan');
 
+  const [userId, setUserId] = useState<string>('');
+  const [userEmail, setUserEmail] = useState<string>('');
   const [currentPlan, setCurrentPlan] = useState<'FREE' | 'PRO' | 'BUSINESS'>('FREE');
   const [subscriptionStatus, setSubscriptionStatus] = useState('active');
-  const [nextBillingDate, setNextBillingDate] = useState('April 15, 2026');
+  const [nextBillingDate, setNextBillingDate] = useState('Monthly Auto-Renew');
   const [loadingPlan, setLoadingPlan] = useState<'PRO' | 'BUSINESS' | null>(null);
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/auth/me')
+      .then((res) => {
+        if (res.status === 401) {
+          router.push('/login');
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!active || !data?.user) return;
+        setUserId(data.user.id);
+        setUserEmail(data.user.email);
+        setCurrentPlan(data.user.plan || 'FREE');
+        if (data.user.subscriptionStatus) {
+          setSubscriptionStatus(data.user.subscriptionStatus);
+        }
+        if (data.user.currentPeriodEnd) {
+          setNextBillingDate(
+            new Date(data.user.currentPeriodEnd).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })
+          );
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
 
   useEffect(() => {
     if (checkoutStatus === 'success') {
@@ -46,8 +84,8 @@ function SettingsContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           plan,
-          email: 'mdsamimhossen827@gmail.com',
-          userId: 'user_live_demo',
+          email: userEmail || 'customer@getaishield.dev',
+          userId: userId || 'user_live',
         }),
       });
 

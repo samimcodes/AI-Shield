@@ -14,10 +14,14 @@ export interface BotEventItem {
   badgeColor: string;
 }
 
-export default function BotActivityFeed() {
+export default function BotActivityFeed({
+  initialEvents,
+}: {
+  initialEvents?: BotEventItem[];
+}) {
   const [selectedBotFilter, setSelectedBotFilter] = useState<string>('ALL');
 
-  const [events, setEvents] = useState<BotEventItem[]>([
+  const [events, setEvents] = useState<BotEventItem[]>(initialEvents ?? [
     {
       id: 'evt-1',
       botName: 'GPTBot / 1.0',

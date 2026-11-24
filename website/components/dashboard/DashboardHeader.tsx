@@ -2,20 +2,30 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Shield, Sparkles, ExternalLink, ArrowUpRight, Zap, CreditCard } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Shield, ExternalLink, Zap, CreditCard, LogOut } from 'lucide-react';
 
 interface DashboardHeaderProps {
   plan?: string;
   requestsUsed?: number;
   requestsMax?: number;
+  userEmail?: string;
 }
 
 export default function DashboardHeader({
   plan = 'Free',
-  requestsUsed = 4200,
+  requestsUsed = 0,
   requestsMax = 5000,
+  userEmail,
 }: DashboardHeaderProps) {
-  const percentUsed = Math.round((requestsUsed / requestsMax) * 100);
+  const router = useRouter();
+  const percentUsed = requestsMax > 0 ? Math.round((requestsUsed / requestsMax) * 100) : 0;
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+    router.refresh();
+  };
 
   return (
     <header className="border-b border-white/10 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-40">
@@ -74,6 +84,20 @@ export default function DashboardHeader({
           >
             <ExternalLink className="h-4 w-4" />
           </a>
+          {userEmail && (
+            <span className="hidden lg:inline-block text-xs text-zinc-400 font-mono truncate max-w-[160px]">
+              {userEmail}
+            </span>
+          )}
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="p-1.5 rounded-lg border border-white/10 bg-zinc-900 text-zinc-400 hover:text-red-400 transition-colors cursor-pointer"
+            title="Log out"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </header>
