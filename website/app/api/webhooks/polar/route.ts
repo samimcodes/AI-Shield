@@ -15,7 +15,16 @@ export async function POST(req: NextRequest) {
       const metadata = data.metadata || {};
       const plan = metadata.plan === 'BUSINESS' ? 'BUSINESS' : 'PRO';
 
-      if (email) {
+      if (metadata.userId) {
+        await prisma.user.updateMany({
+          where: { id: String(metadata.userId) },
+          data: {
+            plan,
+            subscriptionStatus: 'active',
+          },
+        });
+        console.log(`[polar:webhook] User ID ${metadata.userId} upgraded to ${plan}`);
+      } else if (email) {
         await prisma.user.updateMany({
           where: { email },
           data: {
@@ -27,7 +36,16 @@ export async function POST(req: NextRequest) {
       }
     } else if (type === 'subscription.revoked') {
       const email = data.customer?.email || data.customer_email;
-      if (email) {
+      const metadata = data.metadata || {};
+      if (metadata.userId) {
+        await prisma.user.updateMany({
+          where: { id: String(metadata.userId) },
+          data: {
+            plan: 'FREE',
+            subscriptionStatus: 'cancelled',
+          },
+        });
+      } else if (email) {
         await prisma.user.updateMany({
           where: { email },
           data: {

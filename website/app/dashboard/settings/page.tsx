@@ -21,6 +21,8 @@ function SettingsContent() {
   const searchParams = useSearchParams();
   const checkoutStatus = searchParams.get('checkout');
   const planQuery = searchParams.get('plan');
+  const checkoutId = searchParams.get('checkout_id');
+  const simulated = searchParams.get('simulated');
 
   const [userId, setUserId] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
@@ -32,15 +34,33 @@ function SettingsContent() {
 
   useEffect(() => {
     let active = true;
-    fetch('/api/auth/me')
-      .then((res) => {
+    const init = async () => {
+      try {
+        if (checkoutStatus === 'success') {
+          const verifyRes = await fetch('/api/checkout/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              checkoutId,
+              plan: planQuery === 'BUSINESS' ? 'BUSINESS' : 'PRO',
+              simulated,
+            }),
+          });
+          if (verifyRes.ok) {
+            const verifyData = await verifyRes.json();
+            if (active && verifyData?.upgraded) {
+              setShowSuccessBanner(true);
+              setCurrentPlan(verifyData.user.plan);
+            }
+          }
+        }
+
+        const res = await fetch('/api/auth/me');
         if (res.status === 401) {
           router.push('/login');
-          return null;
+          return;
         }
-        return res.json();
-      })
-      .then((data) => {
+        const data = await res.json();
         if (!active || !data?.user) return;
         setUserId(data.user.id);
         setUserEmail(data.user.email);
@@ -57,24 +77,16 @@ function SettingsContent() {
             })
           );
         }
-      })
-      .catch(() => {});
+      } catch {
+        // ignore
+      }
+    };
 
+    init();
     return () => {
       active = false;
     };
-  }, [router]);
-
-  useEffect(() => {
-    if (checkoutStatus === 'success') {
-      setShowSuccessBanner(true);
-      if (planQuery === 'BUSINESS') {
-        setCurrentPlan('BUSINESS');
-      } else {
-        setCurrentPlan('PRO');
-      }
-    }
-  }, [checkoutStatus, planQuery]);
+  }, [router, checkoutStatus, checkoutId, planQuery, simulated]);
 
   const handleUpgrade = async (plan: 'PRO' | 'BUSINESS') => {
     setLoadingPlan(plan);

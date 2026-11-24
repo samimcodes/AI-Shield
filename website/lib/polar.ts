@@ -28,7 +28,9 @@ export async function createPolarCheckout({
   const isSandbox = process.env.POLAR_ENV !== 'production';
   const baseUrl = isSandbox ? 'https://sandbox-api.polar.sh' : 'https://api.polar.sh';
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const returnUrl = redirectUrl || `${appUrl}/dashboard/settings?checkout=success&plan=${plan}`;
+  const returnUrl =
+    redirectUrl ||
+    `${appUrl}/dashboard/settings?checkout=success&plan=${plan}&checkout_id={CHECKOUT_ID}`;
   const productId = POLAR_PRODUCTS[plan];
 
   if (!token || !productId) {

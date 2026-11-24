@@ -1,11 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Shield, Menu, X, ArrowRight } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<{ email: string; plan: string } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.user) {
+          setUser({ email: data.user.email, plan: data.user.plan });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#09090b]/80 backdrop-blur-xl">
@@ -67,19 +79,36 @@ export default function Navbar() {
 
         {/* Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/login"
-            className="px-3.5 py-1.5 text-sm font-medium text-zinc-300 hover:text-white transition-colors"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#06B6D4] hover:bg-cyan-400 text-zinc-950 font-semibold px-4 py-1.5 text-sm shadow-sm hover:shadow-cyan-500/25 transition-all"
-          >
-            <span>Start Free</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          {user ? (
+            <>
+              <span className="text-xs font-mono text-zinc-400 px-2.5 py-1 rounded-md bg-zinc-900 border border-white/10">
+                {user.email}
+              </span>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#06B6D4] hover:bg-cyan-400 text-zinc-950 font-semibold px-4 py-1.5 text-sm shadow-sm hover:shadow-cyan-500/25 transition-all"
+              >
+                <span>Dashboard</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="px-3.5 py-1.5 text-sm font-medium text-zinc-300 hover:text-white transition-colors"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#06B6D4] hover:bg-cyan-400 text-zinc-950 font-semibold px-4 py-1.5 text-sm shadow-sm hover:shadow-cyan-500/25 transition-all"
+              >
+                <span>Start Free</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -139,20 +168,32 @@ export default function Navbar() {
             Documentation
           </Link>
           <div className="pt-3 border-t border-white/10 flex flex-col gap-2">
-            <Link
-              href="/dashboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-center py-2 text-sm text-zinc-300 hover:text-white"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/dashboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-center py-2.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-[#06B6D4] to-[#10B981] text-zinc-950 font-bold"
-            >
-              Start Free
-            </Link>
+            {user ? (
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-center py-2.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-[#06B6D4] to-[#10B981] text-zinc-950 font-bold"
+              >
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-center py-2 text-sm text-zinc-300 hover:text-white"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-center py-2.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-[#06B6D4] to-[#10B981] text-zinc-950 font-bold"
+                >
+                  Start Free
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
