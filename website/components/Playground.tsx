@@ -219,30 +219,30 @@ export default function Playground() {
         </div>
 
         {/* Dual-Panel Sandbox Container */}
-        <div className="rounded-2xl border border-white/10 bg-[#0d1322] shadow-2xl overflow-hidden backdrop-blur-xl">
+        <div className="rounded-2xl border border-white/10 bg-zinc-900/80 shadow-2xl overflow-hidden backdrop-blur-xl">
           {/* Mock Browser/Terminal Bar */}
-          <div className="flex flex-wrap items-center justify-between border-b border-white/10 bg-slate-900/90 px-4 py-3 gap-3">
+          <div className="flex flex-wrap items-center justify-between border-b border-white/10 bg-zinc-950/90 px-4 py-3 gap-3">
             <div className="flex items-center gap-2">
               <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
               <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
               <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
-              <span className="text-xs font-mono text-slate-400 ml-2 font-semibold">
+              <span className="text-xs font-mono text-zinc-400 ml-2 font-semibold">
                 ai-shield-sandbox-v0.1.0
               </span>
             </div>
 
             {/* Simulated Target URL Bar */}
-            <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-slate-950/70 px-3 py-1 text-xs font-mono text-slate-300 w-full sm:w-auto">
+            <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-zinc-900/80 px-3 py-1 text-xs font-mono text-zinc-300 w-full sm:w-auto">
               <span className="text-emerald-400 font-bold text-[11px]">GET</span>
-              <span className="text-slate-500">https://your-api.com</span>
+              <span className="text-zinc-500">https://your-api.com</span>
               <select
                 value={selectedEndpoint}
                 onChange={(e) => setSelectedEndpoint(e.target.value)}
                 className="bg-transparent text-cyan-300 font-mono outline-none cursor-pointer"
               >
-                <option value="/api/v1/products" className="bg-slate-900 text-white">/api/v1/products</option>
-                <option value="/api/market-intelligence" className="bg-slate-900 text-white">/api/market-intelligence</option>
-                <option value="/api/user-directory" className="bg-slate-900 text-white">/api/user-directory</option>
+                <option value="/api/v1/products" className="bg-zinc-900 text-white">/api/v1/products</option>
+                <option value="/api/market-intelligence" className="bg-zinc-900 text-white">/api/market-intelligence</option>
+                <option value="/api/user-directory" className="bg-zinc-900 text-white">/api/user-directory</option>
               </select>
             </div>
 
@@ -257,14 +257,14 @@ export default function Playground() {
           {/* Dual Panel Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
             {/* LEFT PANEL: Persona Selector (5 Cols) */}
-            <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-white/10 bg-slate-950/50 p-5 sm:p-6 flex flex-col justify-between">
+            <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-white/10 bg-zinc-950/60 p-5 sm:p-6 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
                     <Layers className="h-3.5 w-3.5 text-cyan-400" />
                     1. Select Inbound Client Persona
                   </h3>
-                  <span className="text-[11px] text-slate-500">O(1) Fingerprint</span>
+                  <span className="text-[11px] text-zinc-500">O(1) Fingerprint</span>
                 </div>
 
                 {/* Persona Buttons */}
@@ -470,7 +470,7 @@ export default function Playground() {
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <div className="text-[11px] text-slate-400">
+                      <div className="text-[11px] text-zinc-400">
                         Signal Fusion Matrix for: <span className="text-white font-semibold">{persona.name}</span>
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -487,7 +487,7 @@ export default function Playground() {
                           </span>
                         ))}
                       </div>
-                      <div className="pt-2 text-[11px] text-slate-400 leading-normal border-t border-white/5">
+                      <div className="pt-2 text-[11px] text-zinc-400 leading-normal border-t border-white/5">
                         {isPoisoned
                           ? 'Result: High bot score triggers the synthetic poison pipeline. Scraper is fed fake scholarly records; zero corporate product intelligence is leaked.'
                           : 'Result: Standard verified user or Googlebot signature identified. Bypasses poison engine completely, zero false positives.'}
@@ -498,7 +498,7 @@ export default function Playground() {
               </div>
 
               {/* Bottom Insight Footer */}
-              <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+              <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-zinc-400">
                 <span className="flex items-center gap-1.5">
                   <span className={`h-2 w-2 rounded-full ${isPoisoned ? 'bg-rose-400' : 'bg-emerald-400'}`} />
                   {isPoisoned

@@ -97,6 +97,20 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-white/10 bg-[#09090b]/95 backdrop-blur-2xl px-5 py-4 space-y-3">
           <a
+            href="#features"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-medium text-zinc-300 hover:text-white"
+          >
+            Features
+          </a>
+          <a
+            href="#simulator"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-medium text-zinc-300 hover:text-white"
+          >
+            Live Simulator
+          </a>
+          <a
             href="#how-it-works"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-sm font-medium text-zinc-300 hover:text-white"
@@ -117,21 +131,28 @@ export default function Navbar() {
           >
             Pricing
           </a>
+          <Link
+            href="/docs"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-medium text-zinc-300 hover:text-white"
+          >
+            Documentation
+          </Link>
           <div className="pt-3 border-t border-white/10 flex flex-col gap-2">
-            <a
+            <Link
               href="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
               className="text-center py-2 text-sm text-zinc-300 hover:text-white"
             >
-              Log in
-            </a>
-            <a
+              Dashboard
+            </Link>
+            <Link
               href="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-center py-2 text-sm font-semibold rounded-lg bg-[#06B6D4] text-zinc-950"
+              className="text-center py-2.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-[#06B6D4] to-[#10B981] text-zinc-950 font-bold"
             >
               Start Free
-            </a>
+            </Link>
           </div>
         </div>
       )}

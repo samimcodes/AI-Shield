@@ -1,20 +1,23 @@
 'use client';
 
-import React from 'react';
-import { Check, Sparkles, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 export default function Pricing() {
+  const [isAnnual, setIsAnnual] = useState(false);
+
   const tiers = [
     {
       name: 'Free',
       price: '$0',
       period: '/mo',
-      description: 'Essential protection for indie projects and personal sites.',
+      billedNote: 'Free forever for indie hackers',
+      description: 'Essential defense for personal blogs, developer docs, and side projects.',
       features: [
-        '5,000 bot hits / month',
-        'Basic GPTBot block & poison',
-        '24-hour log retention',
-        'Community Discord support',
+        '5,000 bot validations / month',
+        'Basic GPTBot interception',
+        '24-hour incident log retention',
+        'Community Discord & GitHub support',
       ],
       cta: 'Start Free',
       popular: false,
@@ -24,31 +27,35 @@ export default function Pricing() {
     },
     {
       name: 'Pro',
-      price: '$29',
+      price: isAnnual ? '$23' : '$29',
       period: '/mo',
-      description: 'Comprehensive defense for high-value SaaS, blogs & digital media.',
+      billedNote: isAnnual ? 'Billed annually ($276/yr)' : 'Billed monthly, cancel anytime',
+      description: 'Comprehensive active defense for SaaS apps, digital media, and high-traffic APIs.',
       features: [
-        '500,000 bot hits / month',
-        'All AI bots blocked (GPTBot, Claude, ByteDance, Meta)',
-        'Dynamic Data Poisoning (HTTP 200 synthetic data)',
-        '90-day analytics & instant email alerts',
+        '500,000 bot validations / month',
+        'All 50+ AI crawlers blocked & poisoned',
+        'Dynamic Synthetic Hallucinations engine',
+        '90-day forensic analytics & instant email alerts',
+        'Priority architectural email support',
       ],
       cta: 'Upgrade to Pro',
       popular: true,
       href: '/dashboard/settings',
       buttonClass:
-        'bg-[#06B6D4] hover:bg-cyan-400 text-zinc-950 font-semibold shadow-lg shadow-cyan-500/25',
+        'bg-gradient-to-r from-[#06B6D4] to-[#10B981] hover:opacity-95 text-zinc-950 font-bold shadow-lg shadow-cyan-500/25',
     },
     {
       name: 'Business',
-      price: '$99',
+      price: isAnnual ? '$79' : '$99',
       period: '/mo',
-      description: 'Enterprise scale, custom proxies & mission-critical reliability.',
+      billedNote: isAnnual ? 'Billed annually ($948/yr)' : 'Billed monthly, cancel anytime',
+      description: 'Enterprise scale, custom data models, and dedicated edge SLAs.',
       features: [
-        'Unlimited bot hits / month',
-        'Cloudflare Edge Proxy & custom rules',
-        '99.99% uptime SLA guarantee',
-        'Dedicated security architect & priority support',
+        'Unlimited bot validations / month',
+        'Zero-day bot signatures & domain models',
+        'Managed Cloudflare Edge Proxy routing',
+        '1-year attack retention & custom SLA',
+        'Dedicated security architect & Slack channel',
       ],
       cta: 'Get Business',
       popular: false,
@@ -62,7 +69,7 @@ export default function Pricing() {
     <section id="pricing" className="py-20 md:py-28 relative">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-mono uppercase tracking-widest text-[#06B6D4] font-semibold">
             Predictable Pricing
           </span>
@@ -72,6 +79,35 @@ export default function Pricing() {
           <p className="text-zinc-400 text-base mt-3 leading-relaxed">
             Protect your proprietary data today. Scale seamlessly as your traffic expands.
           </p>
+
+          {/* Monthly / Annual Toggle Switch */}
+          <div className="mt-8 inline-flex items-center gap-3 p-1 rounded-full border border-white/10 bg-zinc-900/80 backdrop-blur-md">
+            <button
+              type="button"
+              onClick={() => setIsAnnual(false)}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                !isAnnual
+                  ? 'bg-zinc-800 text-white shadow-sm'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              Monthly Billing
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsAnnual(true)}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                isAnnual
+                  ? 'bg-zinc-800 text-white shadow-sm'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <span>Annual Billing</span>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#10B981]/20 text-[#10B981] border border-emerald-500/30">
+                Save 20%
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* 3-Tier Pricing Grid */}
@@ -88,7 +124,7 @@ export default function Pricing() {
               {/* Popular Badge */}
               {tier.popular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-[#06B6D4] px-3 py-0.5 text-xs font-bold text-zinc-950 shadow-md">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#06B6D4] to-[#10B981] px-3.5 py-0.5 text-xs font-bold text-zinc-950 shadow-md">
                     <Sparkles className="h-3 w-3" />
                     <span>Most Popular</span>
                   </div>
@@ -100,7 +136,7 @@ export default function Pricing() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-xl font-bold text-white">{tier.name}</h3>
                   {tier.name === 'Pro' && (
-                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-semibold">
                       Recommended
                     </span>
                   )}
@@ -111,15 +147,20 @@ export default function Pricing() {
                 </p>
 
                 {/* Price Display */}
-                <div className="flex items-baseline gap-1 mb-6 pb-6 border-b border-white/5">
-                  <span className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-                    {tier.price}
-                  </span>
-                  <span className="text-xs text-zinc-500 font-mono">{tier.period}</span>
+                <div className="mb-6 pb-6 border-b border-white/5">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white font-mono">
+                      {tier.price}
+                    </span>
+                    <span className="text-xs text-zinc-500 font-mono">{tier.period}</span>
+                  </div>
+                  <div className="text-[11px] text-zinc-500 font-mono mt-1">
+                    {tier.billedNote}
+                  </div>
                 </div>
 
-                {/* Crisp 4-5 Bullet Points */}
-                <ul className="space-y-3.5 text-xs text-zinc-300 mb-8">
+                {/* Crisp Bullet Points */}
+                <ul className="space-y-3 text-xs text-zinc-300 mb-8">
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-2.5">
                       <div className="h-4 w-4 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
@@ -141,6 +182,20 @@ export default function Pricing() {
               </a>
             </div>
           ))}
+        </div>
+
+        {/* Guarantee and MoR Trust Badge */}
+        <div className="mt-14 max-w-xl mx-auto rounded-2xl border border-white/5 bg-zinc-900/40 p-4 sm:p-5 backdrop-blur-md text-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-zinc-400">
+            <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+              <ShieldCheck className="h-4 w-4" />
+              14-Day Money-Back Guarantee
+            </span>
+            <span className="hidden sm:inline text-zinc-700">•</span>
+            <span>1-Click Portal Cancellation</span>
+            <span className="hidden sm:inline text-zinc-700">•</span>
+            <span>Polar.sh MoR Security</span>
+          </div>
         </div>
       </div>
     </section>

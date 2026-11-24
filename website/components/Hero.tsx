@@ -11,6 +11,7 @@ import {
   Lock,
   RefreshCw,
   Sparkles,
+  Play,
 } from 'lucide-react';
 
 export default function Hero() {
@@ -49,7 +50,7 @@ export default function Hero() {
   const cleanDomain = url.trim().replace(/^https?:\/\//i, '').replace(/\/.*$/, '') || 'yourdomain.com';
 
   return (
-    <section className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28">
+    <section className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28 bg-grid-pattern radial-spotlight">
       {/* Background ambient gradient */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[360px] bg-gradient-to-tr from-cyan-500/10 via-emerald-500/10 to-transparent blur-[140px] -z-10 pointer-events-none rounded-full" />
 
@@ -72,8 +73,27 @@ export default function Hero() {
 
         {/* Subheadline */}
         <p className="mt-6 text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed font-normal">
-          Block or poison unauthorized AI bots in under 2ms with a single line of code.
+          Stealthily block or poison unauthorized AI crawlers in under 2ms with a single line of code, while guaranteeing 100% SEO safety for Google & Bing.
         </p>
+
+        {/* Dual Action CTAs */}
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+          <a
+            href="/dashboard"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#06B6D4] to-[#10B981] hover:opacity-95 text-zinc-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98]"
+          >
+            <Shield className="h-4 w-4" />
+            <span>Start Free Defense</span>
+            <ArrowRight className="h-4 w-4" />
+          </a>
+          <a
+            href="#simulator"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-zinc-900/80 hover:bg-zinc-800 hover:border-white/20 text-white font-medium px-6 py-3.5 text-sm transition-all shadow-sm backdrop-blur-md active:scale-[0.98]"
+          >
+            <Play className="h-4 w-4 text-cyan-400 fill-cyan-400/20" />
+            <span>Test Live Simulator</span>
+          </a>
+        </div>
 
         {/* Interactive Live Vulnerability Scanner Widget */}
         <div id="scanner" className="mt-12 max-w-2xl mx-auto text-left">
@@ -211,6 +231,26 @@ export default function Hero() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Trust & Performance Metrics Strip */}
+        <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto text-left">
+          <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-4 backdrop-blur-md hover:border-cyan-500/30 transition-colors">
+            <div className="text-xl sm:text-2xl font-extrabold text-white tracking-tight font-mono">&lt; 1.8ms</div>
+            <div className="text-xs text-zinc-400 mt-1 font-medium">Edge Evaluation</div>
+          </div>
+          <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-4 backdrop-blur-md hover:border-emerald-500/30 transition-colors">
+            <div className="text-xl sm:text-2xl font-extrabold text-[#10B981] tracking-tight font-mono">100%</div>
+            <div className="text-xs text-zinc-400 mt-1 font-medium">SEO Whitelisted</div>
+          </div>
+          <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-4 backdrop-blur-md hover:border-cyan-500/30 transition-colors">
+            <div className="text-xl sm:text-2xl font-extrabold text-[#06B6D4] tracking-tight font-mono">50+</div>
+            <div className="text-xs text-zinc-400 mt-1 font-medium">AI Bots Covered</div>
+          </div>
+          <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-4 backdrop-blur-md hover:border-purple-500/30 transition-colors">
+            <div className="text-xl sm:text-2xl font-extrabold text-purple-400 tracking-tight font-mono">200 OK</div>
+            <div className="text-xs text-zinc-400 mt-1 font-medium">Stealth Poisoning</div>
           </div>
         </div>
       </div>

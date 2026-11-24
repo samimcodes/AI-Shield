@@ -80,7 +80,7 @@ export default function Features() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Designed for Modern Web Applications
           </h2>
-          <p className="mt-3 text-slate-300 text-base sm:text-lg">
+          <p className="mt-3 text-zinc-400 text-base sm:text-lg">
             Traditional firewalls block and alert. AI-Shield deceives and poisons. Protect your
             unique intellectual property with an asymmetric tactical advantage.
           </p>
@@ -93,14 +93,14 @@ export default function Features() {
             return (
               <div
                 key={idx}
-                className={`relative rounded-2xl border ${feat.borderColor} bg-slate-900/50 p-8 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl flex flex-col justify-between`}
+                className={`relative rounded-2xl border ${feat.borderColor} bg-zinc-900/60 p-8 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl flex flex-col justify-between`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">
                     <div className={`p-3 rounded-xl bg-gradient-to-br ${feat.color}`}>
                       <Icon className={`h-6 w-6 ${feat.iconColor}`} />
                     </div>
-                    <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300 font-semibold">
+                    <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-300 font-semibold">
                       {feat.badge}
                     </span>
                   </div>
@@ -109,12 +109,12 @@ export default function Features() {
                   <div className="text-xs font-mono text-cyan-400 mb-4 font-semibold">
                     {feat.subtitle}
                   </div>
-                  <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                  <p className="text-sm text-zinc-400 leading-relaxed font-normal">
                     {feat.description}
                   </p>
                 </div>
 
-                <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-semibold text-slate-400">
+                <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-semibold text-zinc-400">
                   <span>Production Tested</span>
                   <ArrowUpRight className="h-4 w-4 text-cyan-400" />
                 </div>
@@ -130,13 +130,13 @@ export default function Features() {
             return (
               <div
                 key={i}
-                className="rounded-xl border border-white/5 bg-white/[0.02] p-6 hover:bg-white/[0.04] transition-colors"
+                className="rounded-xl border border-white/5 bg-zinc-900/40 p-6 hover:bg-zinc-900/70 hover:border-white/10 transition-all backdrop-blur-sm"
               >
                 <div className="flex items-center gap-3 mb-2">
                   <Icon className="h-5 w-5 text-cyan-400" />
                   <h4 className="text-base font-semibold text-white">{f.title}</h4>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed">{f.desc}</p>
+                <p className="text-xs text-zinc-400 leading-relaxed">{f.desc}</p>
               </div>
             );
           })}

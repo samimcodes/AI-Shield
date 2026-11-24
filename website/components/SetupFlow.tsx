@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Key, Code2, ShieldCheck, Copy, Check, Terminal, Radio } from 'lucide-react';
 
 export default function SetupFlow() {
-  const [activeTab, setActiveTab] = useState<'express' | 'nextjs' | 'cloudflare'>('express');
+  const [activeTab, setActiveTab] = useState<'express' | 'nextjs' | 'cloudflare' | 'html'>('express');
   const [copiedKey, setCopiedKey] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
 
@@ -26,6 +26,8 @@ import { aiShieldWorker } from '@samimcodes/ai-shield';
 export default aiShieldWorker({
   apiKey: 'as_live_7x89c4...',
 });`,
+    html: `<!-- Paste before </head> in WordPress, Shopify, Webflow or HTML -->
+<script src="https://cdn.getaishield.dev/shield.js?key=as_live_7x89c4..." async></script>`,
   };
 
   const handleCopyKey = () => {
@@ -156,6 +158,17 @@ export default aiShieldWorker({
                     }`}
                   >
                     Cloudflare
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('html')}
+                    className={`px-2 py-0.5 rounded transition-colors ${
+                      activeTab === 'html'
+                        ? 'bg-zinc-800 text-cyan-400'
+                        : 'text-zinc-500 hover:text-zinc-300'
+                    }`}
+                  >
+                    HTML / Script
                   </button>
                 </div>
                 <button
