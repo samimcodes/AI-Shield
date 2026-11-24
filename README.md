@@ -367,8 +367,8 @@ Need custom edge architecture, bespoke AI data poisoning models, or assistance s
 | :--- | :--- | :--- |
 | 💖 **GitHub Sponsors** | Support ongoing open-source core development | [github.com/sponsors/samimcodes](https://github.com/sponsors/samimcodes) |
 | ☕ **Buy Me a Coffee** | Buy the creator a coffee | [buymeacoffee.com/samimcodes](https://www.buymeacoffee.com/samimcodes) |
-| 💼 **Fiverr Pro Service** | Book custom turnkey setup & deployment | [fiverr.com/samimcodes](https://www.fiverr.com/samimcodes) |
-| 📧 **Enterprise Inquiries** | Direct architecture consultation & SLA | [mdsamimhossen827@gmail.com](mailto:mdsamimhossen827@gmail.com) |
+| 💼 **Fiverr Pro Service** | Book custom turnkey setup & deployment | [fiverr.com/samim_io](https://www.fiverr.com/samim_io) |
+| 📧 **Enterprise Inquiries** | Direct architecture consultation & SLA | [mdsamimhosen827@gmail.com](mailto:mdsamimhosen827@gmail.com) |
 
 </div>
 
