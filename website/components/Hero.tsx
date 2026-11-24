@@ -19,6 +19,22 @@ export default function Hero() {
   const [scanState, setScanState] = useState<'idle' | 'scanning' | 'completed'>('idle');
   const [scanStep, setScanStep] = useState(0);
 
+  const liveEvents = [
+    { bot: 'GPTBot (OpenAI)', path: '/api/products', verdict: 'Poisoned (HTTP 200 OK)', latency: '1.2ms' },
+    { bot: 'ClaudeBot (Anthropic)', path: '/blog/research-data', verdict: 'Poisoned (HTTP 200 OK)', latency: '0.9ms' },
+    { bot: 'Googlebot (Verified)', path: '/pricing', verdict: 'SEO Pass-Through', latency: '0.4ms' },
+    { bot: 'ByteSpider (TikTok)', path: '/docs/architecture', verdict: 'Quarantined', latency: '1.4ms' },
+    { bot: 'PerplexityBot', path: '/api/v1/metrics', verdict: 'Poisoned (HTTP 200 OK)', latency: '1.1ms' },
+  ];
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentEventIndex((prev) => (prev + 1) % liveEvents.length);
+    }, 3200);
+    return () => clearInterval(interval);
+  }, [liveEvents.length]);
+
   const scanSteps = [
     'Probing robots.txt & AI crawler directives...',
     'Testing endpoint resistance to GPTBot, ClaudeBot & ByteSpider...',
@@ -51,22 +67,46 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28 bg-grid-pattern radial-spotlight">
-      {/* Background ambient gradient */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[360px] bg-gradient-to-tr from-cyan-500/10 via-emerald-500/10 to-transparent blur-[140px] -z-10 pointer-events-none rounded-full" />
+      {/* Background ambient lighting & floating orbs */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[400px] bg-gradient-to-tr from-cyan-500/15 via-emerald-500/10 to-purple-500/10 blur-[150px] -z-10 pointer-events-none rounded-full animate-pulse-slow" />
+      <div className="absolute top-12 left-1/4 w-72 h-72 bg-cyan-500/10 blur-[120px] -z-10 pointer-events-none rounded-full animate-float" />
+      <div className="absolute top-24 right-1/4 w-72 h-72 bg-emerald-500/10 blur-[120px] -z-10 pointer-events-none rounded-full animate-float" style={{ animationDelay: '2.5s' }} />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 text-center">
-        {/* Status Pill */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-zinc-900/80 px-3.5 py-1 text-xs font-medium text-zinc-300 shadow-sm backdrop-blur-md mb-8">
-          <span className="flex h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
-          <span className="text-zinc-200">Sub-2ms Lookup Latency</span>
-          <span className="text-zinc-600">•</span>
-          <span className="text-[#10B981] font-medium">100% SEO Safe</span>
+        {/* Top Badges: Live Intercept & Status */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8">
+          {/* Status Pill */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-zinc-900/80 px-3.5 py-1 text-xs font-medium text-zinc-300 shadow-sm backdrop-blur-md">
+            <span className="flex h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
+            <span className="text-zinc-200">Sub-2ms Lookup Latency</span>
+            <span className="text-zinc-600">•</span>
+            <span className="text-[#10B981] font-medium">100% SEO Safe</span>
+          </div>
+
+          {/* Dynamic Live Crawler Ticker */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-zinc-900/90 px-3.5 py-1 text-xs text-zinc-300 shadow-md backdrop-blur-md transition-all duration-300">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 font-semibold">Live Intercept:</span>
+            <span className="font-semibold text-white text-[11px]">
+              {liveEvents[currentEventIndex].bot}
+            </span>
+            <span className="text-zinc-600 font-mono text-[10px]">→</span>
+            <span className="font-mono text-cyan-400 text-[11px]">
+              {liveEvents[currentEventIndex].path}
+            </span>
+            <span className="hidden sm:inline-flex px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              {liveEvents[currentEventIndex].verdict}
+            </span>
+          </div>
         </div>
 
-        {/* Punchy Linear-style Headline */}
+        {/* Punchy Linear-style Headline with Shimmer Animation */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.08] max-w-4xl mx-auto">
           Stop AI Scrapers from Stealing Your Content.{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#06B6D4] via-teal-300 to-[#10B981]">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#06B6D4] via-teal-200 via-emerald-400 to-[#06B6D4] animate-text-shimmer inline-block">
             Automatically.
           </span>
         </h1>
@@ -80,24 +120,24 @@ export default function Hero() {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
           <a
             href="/dashboard"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#06B6D4] to-[#10B981] hover:opacity-95 text-zinc-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#06B6D4] to-[#10B981] hover:opacity-95 text-zinc-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98] group"
           >
-            <Shield className="h-4 w-4" />
+            <Shield className="h-4 w-4 transition-transform group-hover:scale-110" />
             <span>Start Free Defense</span>
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </a>
           <a
             href="#simulator"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-zinc-900/80 hover:bg-zinc-800 hover:border-white/20 text-white font-medium px-6 py-3.5 text-sm transition-all shadow-sm backdrop-blur-md active:scale-[0.98]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-zinc-900/80 hover:bg-zinc-800 hover:border-white/20 text-white font-medium px-6 py-3.5 text-sm transition-all shadow-sm backdrop-blur-md active:scale-[0.98] group"
           >
-            <Play className="h-4 w-4 text-cyan-400 fill-cyan-400/20" />
+            <Play className="h-4 w-4 text-cyan-400 fill-cyan-400/20 transition-transform group-hover:scale-110" />
             <span>Test Live Simulator</span>
           </a>
         </div>
 
-        {/* Interactive Live Vulnerability Scanner Widget */}
-        <div id="scanner" className="mt-12 max-w-2xl mx-auto text-left">
-          <div className="relative rounded-2xl border border-white/10 bg-zinc-900/60 p-6 sm:p-7 backdrop-blur-xl shadow-2xl">
+        {/* Interactive Live Vulnerability Scanner Widget with Border Beam */}
+        <div id="scanner" className="mt-12 max-w-2xl mx-auto text-left border-beam rounded-2xl">
+          <div className="relative rounded-2xl border border-white/10 bg-zinc-900/70 p-6 sm:p-7 backdrop-blur-2xl shadow-2xl overflow-hidden">
             {/* Header / Label */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
