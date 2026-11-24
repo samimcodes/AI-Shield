@@ -11,7 +11,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#09090b]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 h-16">
         {/* Brand Logo */}
-        <a href="#" className="flex items-center gap-2.5 group">
+        <Link href="/" className="flex items-center gap-2.5 group">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900 border border-white/10 group-hover:border-cyan-500/50 transition-colors shadow-sm">
             <Shield className="h-4 w-4 text-[#06B6D4] transition-transform group-hover:scale-110" />
           </div>
@@ -23,10 +23,22 @@ export default function Navbar() {
               v0.3.2
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* Center Navigation Links */}
         <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-400">
+          <a
+            href="#features"
+            className="hover:text-white transition-colors"
+          >
+            Features
+          </a>
+          <a
+            href="#simulator"
+            className="hover:text-white transition-colors"
+          >
+            Live Simulator
+          </a>
           <a
             href="#how-it-works"
             className="hover:text-white transition-colors"
@@ -37,7 +49,7 @@ export default function Navbar() {
             href="#scanner"
             className="hover:text-white transition-colors"
           >
-            Vulnerability Scanner
+            Scanner
           </a>
           <a
             href="#pricing"

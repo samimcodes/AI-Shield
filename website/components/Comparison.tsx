@@ -38,7 +38,7 @@ export default function Comparison() {
   ];
 
   return (
-    <section className="py-16 md:py-24 relative border-t border-white/5">
+    <section id="comparison" className="py-16 md:py-24 relative border-t border-white/5">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">

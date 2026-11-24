@@ -1,5 +1,8 @@
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import Features from '../components/Features';
+import Comparison from '../components/Comparison';
+import Playground from '../components/Playground';
 import SetupFlow from '../components/SetupFlow';
 import Pricing from '../components/Pricing';
 import Footer from '../components/Footer';
@@ -10,6 +13,9 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <Features />
+        <Comparison />
+        <Playground />
         <SetupFlow />
         <Pricing />
       </main>

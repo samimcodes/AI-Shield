@@ -21,6 +21,12 @@ export default function Footer() {
 
           {/* Links */}
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-400">
+            <Link href="/#features" className="hover:text-white transition-colors">
+              Features
+            </Link>
+            <Link href="/#simulator" className="hover:text-white transition-colors">
+              Simulator
+            </Link>
             <Link href="/#how-it-works" className="hover:text-white transition-colors">
               How it Works
             </Link>
@@ -34,7 +40,7 @@ export default function Footer() {
               Documentation
             </Link>
             <a
-              href="https://github.com/samimcodes/ai-shield"
+              href="https://github.com/samimcodes/AI-Shield"
               target="_blank"
               rel="noreferrer"
               className="hover:text-white transition-colors"
