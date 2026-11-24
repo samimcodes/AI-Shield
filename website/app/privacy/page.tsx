@@ -112,7 +112,7 @@ export default function PrivacyPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white">6. Contact Us</h2>
             <p>
-              For privacy-related inquiries, data access, or deletion requests, email us at <a href="mailto:privacy@getaishield.dev" className="text-[#06B6D4] hover:underline">privacy@getaishield.dev</a>.
+              For privacy-related inquiries, data access, or deletion requests, email us at <a href="mailto:mdsamimhosen827@gmail.com" className="text-[#06B6D4] hover:underline">mdsamimhosen827@gmail.com</a>.
             </p>
           </section>
         </div>

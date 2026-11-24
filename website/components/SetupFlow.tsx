@@ -27,7 +27,7 @@ export default aiShieldWorker({
   apiKey: 'as_live_7x89c4...',
 });`,
     html: `<!-- Paste before </head> in WordPress, Shopify, Webflow or HTML -->
-<script src="https://cdn.getaishield.dev/shield.js?key=as_live_7x89c4..." async></script>`,
+<script src="https://ai-shield-dev.vercel.app/api/shield.js?key=as_live_7x89c4..." async></script>`,
   };
 
   const handleCopyKey = () => {

@@ -105,7 +105,7 @@ export default function TermsPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-white">8. Contact Information</h2>
             <p>
-              If you have any questions or concerns regarding these Terms, please contact our support team at <a href="mailto:support@getaishield.dev" className="text-[#06B6D4] hover:underline">support@getaishield.dev</a>.
+              If you have any questions or concerns regarding these Terms, please contact our support team at <a href="mailto:mdsamimhosen827@gmail.com" className="text-[#06B6D4] hover:underline">mdsamimhosen827@gmail.com</a>.
             </p>
           </section>
         </div>
