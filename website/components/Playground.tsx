@@ -227,7 +227,7 @@ export default function Playground() {
               <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
               <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
               <span className="text-xs font-mono text-zinc-400 ml-2 font-semibold">
-                ai-shield-sandbox-v0.3.4
+                ai-shield-sandbox-v0.3.5
               </span>
             </div>
 

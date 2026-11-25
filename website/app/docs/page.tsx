@@ -367,7 +367,7 @@ app.listen(3000);`;
               </div>
               <span className="font-semibold text-sm text-white">AI-Shield Docs</span>
               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-[#10B981] border border-emerald-500/20">
-                v0.3.4
+                v0.3.5
               </span>
             </div>
           </div>
