@@ -2,9 +2,9 @@
 
 # 🛡️ AI-Shield
 
-### **The Enterprise Stealth Defense & Data Poisoning Engine for AI Crawlers**
+### **Autonomous AI Crawler Defense & Stealth Data Poisoning Engine**
 
-*Protect proprietary content from unauthorized LLM scraping in under 2ms. Instead of brittle 403 blocks that trigger IP rotation, AI-Shield stealthily feeds plausible synthetic hallucinations under HTTP 200 OK — while strictly guaranteeing 100% SEO pass-through for Google & Bing.*
+*Protect proprietary content from unauthorized LLM scrapers in under 2ms. Instead of brittle `403 Forbidden` blocks that trigger residential proxy rotation, AI-Shield responds with plausible synthetic payloads under `HTTP 200 OK` — while guaranteeing 100% SEO pass-through for Google & Bing.*
 
 <br/>
 
@@ -17,54 +17,54 @@
 
 <br/>
 
-[**⚡ 10s Quickstart**](#-10-second-zero-config-cli) &nbsp;&bull;&nbsp;
-[**💡 The Paradigm Shift**](#-the-paradigm-shift-stealth-poisoning-vs-blocking) &nbsp;&bull;&nbsp;
-[**🥊 Feature Comparison**](#-feature-comparison) &nbsp;&bull;&nbsp;
-[**🚀 Framework Integrations**](#-framework-integrations) &nbsp;&bull;&nbsp;
+[**🌐 Live Website**](https://ai-shield-dev.vercel.app) &nbsp;&bull;&nbsp;
+[**📚 Documentation**](https://ai-shield-dev.vercel.app/docs) &nbsp;&bull;&nbsp;
+[**📊 Cloud Dashboard**](https://ai-shield-dev.vercel.app/dashboard) &nbsp;&bull;&nbsp;
+[**📦 NPM Package**](https://www.npmjs.com/package/@samimcodes/ai-shield)
+
+<br/>
+
+[**⚡ Quickstart**](#-10-second-zero-config-cli) &nbsp;&bull;&nbsp;
+[**🚀 Integrations**](#-framework-integrations) &nbsp;&bull;&nbsp;
 [**🛡️ Threat Radar**](#-threat-intelligence-radar) &nbsp;&bull;&nbsp;
 [**💎 Cloud SaaS**](#-ai-shield-cloud-saas) &nbsp;&bull;&nbsp;
-[**⚙️ API Reference**](#-api-configuration-reference) &nbsp;&bull;&nbsp;
-[**💖 Support & Sponsors**](#-enterprise-consulting--support)
+[**⚙️ SDK & REST API**](#-sdk--rest-api-reference)
 
 </div>
 
 ---
 
-<br/>
-
 ## 🌟 Executive Overview
 
-Modern AI crawlers (such as **GPTBot**, **ClaudeBot**, **ByteSpider**, and **PerplexityBot**) systematically scrape articles, documentation, SaaS databases, and e-commerce catalogs to train commercial models without attribution or consent.
+Modern AI crawlers (**GPTBot**, **ClaudeBot**, **ByteSpider**, **PerplexityBot**, **CCBot**) continuously harvest articles, documentation, SaaS APIs, and product catalogs without consent.
 
-Traditional security systems rely on **HTTP 403 Forbidden** or **429 Rate Limits**. This approach fails because automated scraper farms detect blocks instantly, rotate residential proxy pools, bypass CAPTCHAs, and resume scraping.
+Traditional firewalls return **HTTP 403 Forbidden** or **429 Too Many Requests**. Scraper orchestration fleets detect those errors immediately, rotate residential proxies, and retry.
 
-**AI-Shield introduces active asymmetric defense:**
+**AI-Shield flips the defense model:**
 
 | 🍯 **Stealth Data Poisoning** | ⚡ **Sub-2ms Edge Evaluation** |
 | :--- | :--- |
-| Returns plausible **HTTP 200 OK** hallucinated data. LLMs ingest corrupted synthetic weights while scraper operators believe requests succeeded without warning. | Zero-overhead regex automata and in-memory LRU caching execute in `< 1.8ms` with zero perceptible impact on legitimate visitors. |
+| Serves plausible **HTTP 200 OK** synthetic payloads (`X-Robots-Tag: noindex, nofollow`). Scrapers assume success while ingesting low-signal noise. | Pre-compiled regex automata and O(1) header heuristics evaluate requests in `< 1.8ms` with zero perceptible overhead. |
 
 | 🔍 **100% SEO Immunity Guarantee** | 🪤 **Dynamic Honeypot Quarantine** |
 | :--- | :--- |
-| Strict reverse DNS and cryptographic verification guarantees Googlebot, Bingbot, and Applebot pass through untouched with 100% fidelity. | Injects invisible DOM traps and inspects client-side webdriver flags to automatically blacklist headless Puppeteer and Selenium bots. |
-
-<br/>
+| Verified search crawlers (**Googlebot**, **Bingbot**, **DuckDuckBot**, **Applebot**) are checked in an O(1) whitelist gate before any poisoning runs. | Injects invisible DOM traps (`/api/internal/telemetry-sync`) and detects headless automation flags (`navigator.webdriver`). |
 
 ---
 
-## 💡 The Paradigm Shift: Stealth Poisoning vs. Blocking
+## 💡 How It Works
 
 ```mermaid
 flowchart LR
     A["Incoming HTTP Request"] --> B{"AI-Shield Engine<br/>(< 2ms Evaluation)"}
-    
-    B -->|"Verified Search Engine<br/>(Googlebot, Bingbot)"| C["Original Source Content<br/>(HTTP 200 OK)<br/>SEO Rank 100% Preserved"]
+
+    B -->|"Verified Search Engine<br/>(Googlebot, Bingbot)"| C["Original Content<br/>(HTTP 200 OK)<br/>SEO Rank 100% Preserved"]
     B -->|"Legitimate User<br/>(Chrome, Safari, Firefox)"| C
-    
-    B -->|"AI Crawler Detected<br/>(GPTBot, Claude, ByteSpider)"| D["Stealth Poisoning Engine<br/>Synthetic Hallucinations"]
-    B -->|"Headless Scraper<br/>(Puppeteer, Selenium)"| E["Invisible Honeypot Trap<br/>Instant IP Quarantine"]
-    
-    D --> F["Plausible Hallucinated Data<br/>(HTTP 200 OK)<br/>Header: X-Robots-Tag: noindex"]
+
+    B -->|"AI Crawler Detected<br/>(GPTBot, ClaudeBot, ByteSpider)"| D["PoisonEngine<br/>Synthetic Payload"]
+    B -->|"Headless Scraper<br/>(Puppeteer, Playwright)"| E["Honeypot Trap<br/>IP Flagged (24h TTL)"]
+
+    D --> F["HTTP 200 OK + Synthetic Data<br/>X-Robots-Tag: noindex, nofollow"]
     E --> F
 
     style A fill:#18181b,stroke:#27272a,color:#ffffff
@@ -75,66 +75,69 @@ flowchart LR
     style F fill:#1c1917,stroke:#f59e0b,stroke-width:2px,color:#ffffff
 ```
 
-<br/>
-
 ---
 
-## 🥊 Feature Comparison
+## 🥊 Why Engineering Teams Switch to AI-Shield
 
-Why engineering teams are replacing legacy WAF rules with AI-Shield:
-
-| Security Capability | `robots.txt` Standard | Traditional WAF (Cloudflare / AWS) | AI-Shield 🛡️ |
+| Security Capability | `robots.txt` | Traditional WAF | AI-Shield 🛡️ |
 | :--- | :---: | :---: | :---: |
-| **Enforcement Mechanism** | Voluntary advisory (ignored by scrapers) | Hard block (`403 Forbidden` / `429`) | **Stealth Active Defense (`HTTP 200 OK`)** |
-| **Scraper Evasion Resistance** | ❌ None | ⚠️ High evasion (triggers residential IP rotation) | ✅ **Zero evasion (scrapers assume success)** |
-| **Model Invalidation** | ❌ Zero | ❌ Zero | ✅ **Poisons training datasets with noise** |
-| **Verified SEO Safety** | ⚠️ Risky (misconfigured disallow loses rank) | ⚠️ False positives risk de-indexing | ✅ **Cryptographic & reverse DNS whitelist** |
-| **Evaluation Overhead** | 0 ms | 15 ms &ndash; 50 ms | **< 1.8 ms in-memory state automata** |
-| **Headless Bot Detection** | ❌ None | ⚠️ Interstitial CAPTCHA frustrates users | ✅ **Silent `navigator.webdriver` honeypot** |
-| **Zero-Config Installation** | 1 minute | Hours/Days of custom firewall rules | **10-second automated CLI installer** |
-
-<br/>
+| **Enforcement Mechanism** | Advisory only (often ignored) | Hard block (`403` / `429`) | **Stealth Active Defense (`HTTP 200 OK`)** |
+| **Proxy Rotation Resistance** | ❌ None | ⚠️ Triggers instant IP rotation | ✅ **Zero evasion (scrapers assume success)** |
+| **Training Corpus Protection** | ❌ None | ❌ None | ✅ **Degrades scraped datasets with noise** |
+| **SEO Safety** | ⚠️ Risky if misconfigured | ⚠️ False-positive de-indexing risk | ✅ **O(1) verified crawler whitelist** |
+| **Evaluation Latency** | 0 ms | 15 ms – 50 ms | **< 1.8 ms in-memory evaluation** |
+| **Setup Time** | Manual | Hours of custom rules | **60 seconds via CLI or 1-line `<script>`** |
 
 ---
 
 ## ⚡ 10-Second Zero-Config CLI
 
-Install and patch your project with automated AI defense in a single terminal command:
+Install the SDK or run the interactive setup wizard:
 
 ```bash
-# Automatically detects Next.js or Express.js, configures defense & mounts live dashboard
+# Install package
+npm install @samimcodes/ai-shield
+
+# Auto-detect Next.js or Express.js and configure AI-Shield
 npx @samimcodes/ai-shield init
+
+# Simulate a GPTBot attack against your local server
+npx @samimcodes/ai-shield test http://localhost:3000
 ```
 
-### 🧪 Instant Threat Simulator
-Simulate an active AI scraping attack to verify that poisoned data is served under HTTP 200:
+### Verify with `curl`
 ```bash
-npx @samimcodes/ai-shield test http://localhost:3000/api/products
-```
+# 1. AI Crawler -> Expect HTTP 200 OK with synthetic poisoned payload
+curl -i -A "GPTBot/1.0" http://localhost:3000/
 
-<br/>
+# 2. Googlebot -> Expect your authentic, untouched SEO content
+curl -i -A "Googlebot/2.1 (+http://www.google.com/bot.html)" http://localhost:3000/
+```
 
 ---
 
 ## 🚀 Framework Integrations
 
-Choose the deployment architecture that fits your stack:
-
-### 1. Next.js App Router (`middleware.ts`)
+### 1. Next.js Edge Middleware (`middleware.ts`)
 ```typescript
 import { NextResponse, type NextRequest } from 'next/server';
-import { aiShieldEdge } from '@samimcodes/ai-shield';
+import { BotDetector, PoisonEngine } from '@samimcodes/ai-shield';
 
-export async function middleware(req: NextRequest) {
-  // Ultra-fast sub-2ms edge evaluation
-  const shield = await aiShieldEdge(req, {
-    apiKey: process.env.AI_SHIELD_API_KEY, // Optional: as_live_...
-    action: 'POISON',                      // 'POISON' | 'BLOCK' | 'QUARANTINE'
-  });
+const detector = new BotDetector();
+const poison = new PoisonEngine('JSON');
 
-  // If unauthorized AI crawler is detected, return HTTP 200 with synthetic data
-  if (shield.isBot) {
-    return shield.response;
+export function middleware(req: NextRequest) {
+  const detection = detector.detect(Object.fromEntries(req.headers.entries()));
+
+  if (detection.category === 'AI_CRAWLER' || detection.score >= 50) {
+    const payload = poison.generate(req.nextUrl.pathname, 'JSON');
+    return new NextResponse(payload.body, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Robots-Tag': 'noindex, nofollow',
+      },
+    });
   }
 
   return NextResponse.next();
@@ -145,9 +148,7 @@ export const config = {
 };
 ```
 
-<br/>
-
-### 2. Express.js & Node.js Server (`server.ts`)
+### 2. Express.js Drop-in Middleware (`server.ts`)
 ```typescript
 import express from 'express';
 import { aiShield } from '@samimcodes/ai-shield';
@@ -155,227 +156,129 @@ import { aiShield } from '@samimcodes/ai-shield';
 const app = express();
 
 app.use(aiShield({
-  apiKey: process.env.AI_SHIELD_API_KEY,
-  enableDashboard: true,               // Mounts live security monitor
-  dashboardPath: '/admin/ai-shield',  // Real-time SSE attack stream
-  poisonContentType: 'AUTO',           // 'AUTO' | 'HTML' | 'JSON' | 'SITEMAP'
-  injectHoneypotLinks: true,           // Injects invisible DOM honeypots
+  apiKey: process.env.AI_SHIELD_API_KEY, // Optional: as_live_...
+  poisonContentType: 'HTML',             // 'HTML' | 'JSON' | 'AUTO'
+  injectHoneypotLinks: true,
+  enableDashboard: true,                 // Mounts live monitor at /admin/ai-shield
 }));
 
 app.get('/api/products', (req, res) => {
-  // Humans & Googlebot receive genuine catalog
-  // GPTBot & Claude receive synthetic hallucinated data
-  res.json({ secretCatalog: [/* corporate data */] });
+  res.json({ status: 'ok', data: 'Protected enterprise content' });
 });
 
-app.listen(3000, () => {
-  console.log('Shield active on http://localhost:3000');
-  console.log('Live Monitor: http://localhost:3000/admin/ai-shield');
-});
+app.listen(3000);
 ```
 
-<br/>
+### 3. WordPress, Shopify, Webflow & Static HTML (`<script>`)
+For non-Node websites, paste a single `<script>` tag before `</head>` or `</body>` using your API key from the [Cloud Dashboard](https://ai-shield-dev.vercel.app/dashboard):
 
-### 3. WordPress, Shopify & Static HTML (1-Line `<script>`)
-Ideal for Webflow, Framer, Ghost, WordPress, and marketing sites:
 ```html
-<!-- Paste before </head> or </body> -->
-<script src="https://cdn.getaishield.dev/shield.js?key=YOUR_API_KEY" async></script>
+<script src="https://ai-shield-dev.vercel.app/api/shield.js?key=YOUR_API_KEY" async></script>
 ```
-*Client-side crawler detection automatically flags headless browsers (`navigator.webdriver`), injects invisible honeypot DOM traps, and syncs bot telemetry in the background.*
 
-<br/>
-
-### 4. Cloudflare Worker (Global Edge Proxy)
-Deploy defense across 300+ global edge locations without touching your origin server:
+### 4. Cloudflare Worker (Edge Reverse Proxy)
 ```javascript
 export default {
-  async fetch(request, env) {
-    const ua = request.headers.get('User-Agent') || '';
-    const isAiCrawler = /GPTBot|ClaudeBot|PerplexityBot|ByteSpider|CCBot|Meta-ExternalAgent/i.test(ua);
+  async fetch(request) {
+    const userAgent = request.headers.get('User-Agent') || '';
+    const isAiBot = /GPTBot|Claude-Web|ClaudeBot|ByteSpider|PerplexityBot|CCBot/i.test(userAgent);
 
-    if (isAiCrawler) {
-      return new Response(
-        JSON.stringify({
-          status: "success",
-          data: { notice: "Telemetry sync complete", syntheticToken: crypto.randomUUID() }
-        }),
-        {
-          status: 200,
-          headers: { 
-            "Content-Type": "application/json", 
-            "X-Robots-Tag": "noindex, nofollow" 
-          }
-        }
-      );
+    if (isAiBot) {
+      return new Response(JSON.stringify({ status: 200, synthetic: true }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Robots-Tag': 'noindex, nofollow',
+        },
+      });
     }
 
     return fetch(request);
-  }
+  },
 };
 ```
-
-<br/>
 
 ---
 
 ## 🛡️ Threat Intelligence Radar
 
-AI-Shield continuously identifies, classifies, and neutralizes over 50+ commercial AI harvesters:
-
-| Threat Category | Known Signatures & Bots | Detection Heuristics | AI-Shield Autonomous Action |
+| Threat Category | Example Signatures | Detection Signals | Action Taken |
 | :--- | :--- | :--- | :--- |
-| **Generative LLM Crawlers** | `GPTBot`, `ChatGPT-User`, `ClaudeBot`, `Claude-Web`, `PerplexityBot`, `Meta-ExternalAgent`, `Applebot-Extended` | Signature regex automata, header entropy | **HTTP 200 + Dynamic Data Poisoning** |
-| **Mass Dataset Harvesters** | `CCBot`, `Diffbot`, `Bytespider`, `YouBot`, `Cohere-ai`, `ImagesiftBot`, `Omgilibot` | Missing Accept-Language, automated UA fingerprinting | **HTTP 200 + Synthetic Hallucinations** |
-| **Headless Scraping Kits** | `Puppeteer`, `Playwright`, `Selenium`, `Scrapy`, `cURL`, `Axios`, `Python-requests` | `navigator.webdriver`, honeypot traps | **IP Quarantine + Synthetic Garbage** |
-| **Verified Search Engines** | `Googlebot`, `Bingbot`, `DuckDuckBot`, `YandexBot`, `Baiduspider` | Cryptographic & reverse DNS whitelist | **Instant Pass-through (0ms latency impact)** |
-| **Genuine Human Traffic** | Chrome, Safari, Firefox, Edge, Brave, Mobile OS | Standard browser TLS & navigation profile | **Standard Unaltered Application Response** |
-
-<br/>
+| **LLM Training Crawlers** | `GPTBot`, `ClaudeBot`, `Claude-Web`, `PerplexityBot`, `Meta-ExternalAgent` | Pre-compiled UA patterns, header heuristics | **HTTP 200 + Synthetic Poison** |
+| **Dataset Harvesters** | `CCBot`, `ByteSpider`, `Diffbot`, `Cohere-ai`, `ImagesiftBot` | UA pattern match, missing `Accept-Language` | **HTTP 200 + Synthetic Poison** |
+| **Headless & CLI Scrapers** | `Puppeteer`, `Playwright`, `Selenium`, `Scrapy`, `curl`, `python-requests` | `navigator.webdriver`, automation headers, honeypot traps | **IP Flagged + Synthetic Garbage** |
+| **Verified Search Engines** | `Googlebot`, `Bingbot`, `DuckDuckBot`, `Applebot`, `Baiduspider` | O(1) whitelist evaluation | **Instant Pass-Through (0ms)** |
 
 ---
 
 ## 💎 AI-Shield Cloud (SaaS)
 
-AI-Shield is open-core. You can self-host the open-source package for free, or connect to **AI-Shield Cloud** for managed edge quotas, dynamic AI poisoning, and real-time enterprise analytics.
+AI-Shield is open-core. Use `@samimcodes/ai-shield` locally for free, or connect to [**AI-Shield Cloud**](https://ai-shield-dev.vercel.app) for persistent Neon PostgreSQL analytics, multi-key management, and higher monthly quotas:
 
-| Feature Matrix | Open-Source (Free) | Pro ($7.99/mo) | Business ($14.99/mo) |
-| :--- | :---: | :---: | :---: |
-| **Monthly Bot Validations** | 5,000 requests | 500,000 requests | **Unlimited** |
-| **AI Crawler Coverage** | Basic GPTBot | **All 50+ AI Bots** | **All AI Bots + Zero-Day Crawlers** |
-| **Data Poisoning Engine** | Static Poisoning | **Dynamic Hallucinations** | **Custom Domain-Specific Models** |
-| **Attack Log Retention** | 24 Hours | **90 Days** | **1 Year / Custom SLA** |
-| **Real-time Security Dashboard** | Local Only | **Cloud Analytics UI** | **Multi-Tenant Team Workspace** |
-| **Automated Incident Alerts** | ❌ | **Email & Webhooks** | **Slack, Discord & PagerDuty Sync** |
-| **Cloudflare Edge Proxy** | Manual | Supported | **Managed 1-Click DNS Edge Routing** |
-| **Support Level** | GitHub Issues | Priority Email | **Dedicated Security Architect & SLA** |
+| Plan | Monthly Bot Validations | Key Features | Price |
+| :--- | :---: | :--- | :---: |
+| **Free** | 5,000 / mo | Basic GPTBot interception, 24h incident logs | **$0/mo** |
+| **Pro** | 500,000 / mo | All 50+ AI bots, dynamic hallucinations, 90-day analytics | **$7.99/mo** |
+| **Business** | Unlimited | Zero-day signatures, managed edge routing, custom SLA | **$14.99/mo** |
 
-<br/>
-
-<div align="center">
-
-👉 **[Start Free or Upgrade on AI-Shield Cloud](https://getaishield.dev/dashboard)**  
-💳 *Payments securely powered by **[Polar.sh](https://polar.sh)** Merchant of Record (Credit Card, PayPal, Instant Invoices, 14-day Money-Back Guarantee).*
-
-</div>
-
-<br/>
+> Billing & Customer Portal powered by [**Polar.sh**](https://polar.sh) Merchant of Record (14-day money-back guarantee, 1-click cancellation).
 
 ---
 
-## 📊 Real-Time Security Dashboard
+## ⚙️ SDK & REST API Reference
 
-Run with `enableDashboard: true` to mount the built-in observability dashboard at `/admin/ai-shield`:
+### `AiShieldOptions`
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `apiKey` | `string` | `undefined` | Live key (`as_live_...`) for SaaS quota sync & telemetry. |
+| `scoreThreshold` | `number` | `50` | Minimum fused bot score (`0–100`) required before serving poison. |
+| `poisonContentType` | `'HTML' \| 'JSON' \| 'AUTO'` | `'HTML'` | Format of synthetic poisoned payloads returned to scrapers. |
+| `injectHoneypotLinks` | `boolean` | `true` | Inject hidden `<a>` traps into HTML responses. |
+| `honeypotTtlMs` | `number \| null` | `86400000` | Duration (24h default) an IP stays flagged after hitting a trap. |
+| `excludePaths` | `(string \| RegExp)[]` | `[]` | Routes that bypass AI-Shield evaluation (e.g. `/health`). |
+| `customFingerprints` | `BotFingerprint[]` | `[]` | Custom User-Agent regex rules merged into the detector. |
+| `enableDashboard` | `boolean` | `false` | Mount the built-in Express live security monitor. |
+| `dashboardPath` | `string` | `'/admin/ai-shield'` | Route prefix for the Express security dashboard. |
+| `debug` | `boolean` | `false` | Enable verbose stdout logging (keep `false` in production). |
 
-- 🚨 **Live Attack Feed**: Real-time Server-Sent Events (SSE) streaming every intercepted crawler.
-- 📈 **Telemetry Analytics**: Track crawler volume, synthetic bandwidth served, and saved computational costs.
-- 🧪 **One-Click Simulator**: Test synthetic poisoning against simulated scrapers directly inside the UI.
-- 🔑 **API Key Management**: Instant 1-click provisioning and rotation for multi-tenant deployments.
+### Cloud REST Endpoints
+- `POST /api/v1/validate` — Validate `x-api-key` quota and record bot interception telemetry (`botName`, `path`, `actionTaken`, `bandwidthSavedBytes`).
+- `POST /api/v1/verify` — Verify `as_live_...` API key connectivity and active status.
+- `GET /api/shield.js?key=YOUR_API_KEY` — Browser-side crawler detection and dynamic honeypot trap script.
 
-<br/>
-
----
-
-## ⚙️ API Configuration Reference
-
-```typescript
-export interface AIShieldOptions {
-  /**
-   * Cloud API Key for synchronized quotas and shared threat intelligence (e.g. as_live_...).
-   */
-  apiKey?: string;
-
-  /**
-   * Action to execute upon detecting an unauthorized AI crawler.
-   * 'POISON': Stealth HTTP 200 with hallucinated synthetic data (Recommended)
-   * 'BLOCK': HTTP 403 Forbidden with security notice
-   * 'QUARANTINE': Quarantines IP and serves synthetic garbage
-   * @default 'POISON'
-   */
-  action?: 'POISON' | 'BLOCK' | 'QUARANTINE';
-
-  /**
-   * Format of synthetic poisoned payload.
-   * 'AUTO': Guesses JSON vs HTML based on incoming Accept headers
-   * 'HTML': Synthetic landing pages with fake articles and citations
-   * 'JSON': Synthetic REST API payloads with realistic dummy entities
-   * 'SITEMAP': Fake XML sitemaps to poison crawler indexing structures
-   * @default 'AUTO'
-   */
-  poisonContentType?: 'AUTO' | 'HTML' | 'JSON' | 'SITEMAP';
-
-  /**
-   * Mount the real-time SSE security monitor dashboard.
-   * @default false
-   */
-  enableDashboard?: boolean;
-
-  /**
-   * Custom path where the dashboard is served.
-   * @default '/admin/ai-shield'
-   */
-  dashboardPath?: string;
-
-  /**
-   * Injects invisible zero-opacity links into HTML responses to trap automated scrapers.
-   * @default true
-   */
-  injectHoneypotLinks?: boolean;
-
-  /**
-   * Custom user-agent regular expressions to treat as AI crawlers.
-   */
-  customBotPatterns?: RegExp[];
-
-  /**
-   * Custom user-agents or IP addresses to explicitly whitelist.
-   */
-  whitelist?: (string | RegExp)[];
-}
-```
-
-<br/>
+Full interactive examples are available in the [**Developer Documentation**](https://ai-shield-dev.vercel.app/docs).
 
 ---
 
-## 🧪 Testing & Verification
-
-AI-Shield includes a comprehensive, production-grade test suite covering regex automata, honeypot quarantining, synthetic data entropy, and reverse-DNS SEO whitelisting:
+## 🧪 Testing & Local Development
 
 ```bash
-# Run complete test suite (199/199 passing)
+# Run core SDK unit & integration tests (199/199 passing)
 npm test
 
-# Run tests in interactive watch mode
-npm run test:watch
+# Typecheck core SDK
+npm run typecheck
 
-# Run tests with code coverage analysis
-npm run test:coverage
+# Run Next.js SaaS website locally
+npm run website:dev
+
+# Build Next.js SaaS website
+npm run website:build
 ```
-
-<br/>
 
 ---
 
 ## 💖 Enterprise Consulting & Support
 
-Need custom edge architecture, bespoke AI data poisoning models, or assistance securing proprietary datasets?
-
-<div align="center">
-
 | Channel | Purpose | Link |
 | :--- | :--- | :--- |
-| 💖 **GitHub Sponsors** | Support ongoing open-source core development | [github.com/sponsors/samimcodes](https://github.com/sponsors/samimcodes) |
-| ☕ **Buy Me a Coffee** | Buy the creator a coffee | [buymeacoffee.com/samimcodes](https://www.buymeacoffee.com/samimcodes) |
-| 💼 **Fiverr Pro Service** | Book custom turnkey setup & deployment | [fiverr.com/samim_io](https://www.fiverr.com/samim_io) |
-| 📧 **Enterprise Inquiries** | Direct architecture consultation & SLA | [mdsamimhosen827@gmail.com](mailto:mdsamimhosen827@gmail.com) |
-
-</div>
-
-<br/>
+| 💖 **GitHub Sponsors** | Support open-source development | [github.com/sponsors/samimcodes](https://github.com/sponsors/samimcodes) |
+| ☕ **Buy Me a Coffee** | Support the creator | [buymeacoffee.com/samimcodes](https://www.buymeacoffee.com/samimcodes) |
+| 💼 **Fiverr Pro Service** | Custom setup & deployment | [fiverr.com/samim_io](https://www.fiverr.com/samim_io) |
+| 📧 **Enterprise Inquiries** | Architecture consultation & SLA | [mdsamimhosen827@gmail.com](mailto:mdsamimhosen827@gmail.com) |
 
 ---
 
 ## 📄 License
 
-Distributed under the **MIT License**. Created with ❤️ by [Samim Hossen (samimcodes)](https://github.com/samimcodes).
+Distributed under the **MIT License**. Built by [Samim Hossen (samimcodes)](https://github.com/samimcodes).
