@@ -78,9 +78,9 @@ export default function Pricing() {
     },
     {
       name: 'Pro',
-      price: isAnnual ? '$23' : '$29',
+      price: isAnnual ? '$6.39' : '$7.99',
       period: '/mo',
-      billedNote: isAnnual ? 'Billed annually ($276/yr)' : 'Billed monthly, cancel anytime',
+      billedNote: isAnnual ? 'Billed annually ($76.68/yr)' : 'Billed monthly, cancel anytime',
       description: 'Comprehensive active defense for SaaS apps, digital media, and high-traffic APIs.',
       features: [
         '500,000 bot validations / month',
@@ -97,9 +97,9 @@ export default function Pricing() {
     },
     {
       name: 'Business',
-      price: isAnnual ? '$79' : '$99',
+      price: isAnnual ? '$11.99' : '$14.99',
       period: '/mo',
-      billedNote: isAnnual ? 'Billed annually ($948/yr)' : 'Billed monthly, cancel anytime',
+      billedNote: isAnnual ? 'Billed annually ($143.88/yr)' : 'Billed monthly, cancel anytime',
       description: 'Enterprise scale, custom data models, and dedicated edge SLAs.',
       features: [
         'Unlimited bot validations / month',

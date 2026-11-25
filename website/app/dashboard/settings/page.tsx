@@ -239,7 +239,7 @@ function SettingsContent() {
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-lg font-bold text-white">Pro Tier</h3>
                 <div className="flex items-baseline gap-0.5">
-                  <span className="text-3xl font-extrabold text-white tracking-tight">$29</span>
+                  <span className="text-3xl font-extrabold text-white tracking-tight">$7.99</span>
                   <span className="text-xs text-zinc-400 font-mono">/mo</span>
                 </div>
               </div>
@@ -284,7 +284,7 @@ function SettingsContent() {
               ) : (
                 <>
                   <Zap className="h-3.5 w-3.5 fill-current" />
-                  <span>Upgrade to Pro ($29/mo)</span>
+                  <span>Upgrade to Pro ($7.99/mo)</span>
                 </>
               )}
             </button>
@@ -296,7 +296,7 @@ function SettingsContent() {
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-lg font-bold text-white">Business Tier</h3>
                 <div className="flex items-baseline gap-0.5">
-                  <span className="text-3xl font-extrabold text-white tracking-tight">$99</span>
+                  <span className="text-3xl font-extrabold text-white tracking-tight">$14.99</span>
                   <span className="text-xs text-zinc-400 font-mono">/mo</span>
                 </div>
               </div>
@@ -340,7 +340,7 @@ function SettingsContent() {
                 <span>Current Active Plan</span>
               ) : (
                 <>
-                  <span>Upgrade to Business ($99/mo)</span>
+                  <span>Upgrade to Business ($14.99/mo)</span>
                 </>
               )}
             </button>

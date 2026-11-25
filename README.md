@@ -239,7 +239,7 @@ AI-Shield continuously identifies, classifies, and neutralizes over 50+ commerci
 
 AI-Shield is open-core. You can self-host the open-source package for free, or connect to **AI-Shield Cloud** for managed edge quotas, dynamic AI poisoning, and real-time enterprise analytics.
 
-| Feature Matrix | Open-Source (Free) | Pro ($29/mo) | Business ($99/mo) |
+| Feature Matrix | Open-Source (Free) | Pro ($7.99/mo) | Business ($14.99/mo) |
 | :--- | :---: | :---: | :---: |
 | **Monthly Bot Validations** | 5,000 requests | 500,000 requests | **Unlimited** |
 | **AI Crawler Coverage** | Basic GPTBot | **All 50+ AI Bots** | **All AI Bots + Zero-Day Crawlers** |
