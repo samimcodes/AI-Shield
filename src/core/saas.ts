@@ -161,7 +161,7 @@ export class SaasClient {
         headers: {
           'x-api-key': targetKey,
           'Accept': 'application/json',
-          'User-Agent': 'ai-shield-client/0.3.4',
+          'User-Agent': 'ai-shield-client/0.3.5',
         },
         signal: controller.signal,
       }).finally(() => clearTimeout(timer));

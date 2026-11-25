@@ -290,7 +290,7 @@ export class DashboardManager {
     return router;
   }
 
-  /** Render self-contained, responsive, dark-mode single-page HTML dashboard. */
+  /** Render self-contained, responsive, Obsidian dark-mode HTML dashboard. */
   public renderHtml(): string {
     const basePath = this.basePath;
     return `<!DOCTYPE html>
@@ -301,39 +301,45 @@ export class DashboardManager {
   <title>AI Shield — Live Security Monitor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: rgba(17, 24, 39, 0.75);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --accent: #10b981;
+      --bg: #09090b;
+      --card-bg: rgba(24, 24, 27, 0.72);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --cyan: #06b6d4;
+      --emerald: #10b981;
       --danger: #f43f5e;
       --warning: #f59e0b;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
+      --purple: #a855f7;
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
-      background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.14) 0%, rgba(16, 185, 129, 0.05) 35%, transparent 65%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 100% 100%, 36px 36px, 36px 36px;
     }
     header {
-      padding: 1.25rem 2rem;
+      padding: 0.9rem 1.5rem;
       border-bottom: 1px solid var(--card-border);
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      background: rgba(9, 13, 22, 0.85);
-      backdrop-filter: blur(12px);
+      gap: 0.75rem;
+      background: rgba(9, 9, 11, 0.85);
+      backdrop-filter: blur(18px);
       position: sticky;
       top: 0;
       z-index: 50;
@@ -341,36 +347,48 @@ export class DashboardManager {
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.65rem;
       font-weight: 700;
-      font-size: 1.25rem;
+      font-size: 1.05rem;
       letter-spacing: -0.02em;
     }
     .shield-icon {
       width: 32px;
       height: 32px;
-      background: linear-gradient(135deg, #6366f1, #a855f7);
+      background: linear-gradient(135deg, #18181b, #09090b);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 0 18px rgba(6, 182, 212, 0.2);
+    }
+    .ver-pill {
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.25);
     }
     .badge-live {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.25rem 0.75rem;
+      gap: 0.45rem;
+      padding: 0.25rem 0.7rem;
       border-radius: 9999px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      background: rgba(16, 185, 129, 0.12);
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(16, 185, 129, 0.1);
       color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      border: 1px solid rgba(16, 185, 129, 0.25);
     }
     .pulse-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #10b981;
       box-shadow: 0 0 8px #10b981;
@@ -382,63 +400,67 @@ export class DashboardManager {
     }
     .header-actions {
       display: flex;
-      gap: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.6rem;
       align-items: center;
     }
     .btn {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-size: 0.875rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 9px;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.18s ease;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       border: 1px solid transparent;
+      text-decoration: none;
     }
     .btn-primary {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color: white;
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+      background: linear-gradient(135deg, #06b6d4, #10b981);
+      color: #09090b;
+      font-weight: 700;
+      box-shadow: 0 0 18px rgba(6, 182, 212, 0.25);
     }
     .btn-primary:hover {
       opacity: 0.92;
       transform: translateY(-1px);
     }
     .btn-outline {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.04);
       border-color: var(--card-border);
       color: var(--text);
     }
     .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.18);
     }
     main {
       flex: 1;
-      padding: 2rem;
-      max-width: 1400px;
+      padding: 1.75rem 1.5rem;
+      max-width: 1280px;
       width: 100%;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 1.5rem;
     }
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
     }
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1.25rem 1.5rem;
+      border-radius: 14px;
+      padding: 1.2rem 1.35rem;
       backdrop-filter: blur(16px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.45rem;
       position: relative;
       overflow: hidden;
     }
@@ -446,139 +468,209 @@ export class DashboardManager {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.4), transparent);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.45), transparent);
     }
     .card-title {
-      font-size: 0.8125rem;
+      font-size: 0.72rem;
       font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
     }
     .card-val {
-      font-size: 2rem;
-      font-weight: 700;
+      font-size: 1.9rem;
+      font-weight: 800;
       color: #fff;
       font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
     }
     .card-sub {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 0.25rem;
+      gap: 0.35rem;
     }
     .text-emerald { color: #34d399; }
     .text-rose { color: #fb7185; }
     .text-amber { color: #fbbf24; }
-    .text-indigo { color: #818cf8; }
+    .text-cyan { color: #22d3ee; }
+
+    /* Breakdown Grid (Top Bots & Top Routes) */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    .insight-list {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .insight-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+    }
+    .insight-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .bar-track {
+      height: 6px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #06b6d4, #10b981);
+      transition: width 0.35s ease;
+    }
 
     /* Alert Banner Toast */
     #alert-toast {
       position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      max-width: 440px;
-      width: calc(100% - 4rem);
-      background: rgba(17, 24, 39, 0.95);
-      border: 1px solid #f43f5e;
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      box-shadow: 0 12px 40px rgba(244, 63, 94, 0.35);
+      bottom: 1.5rem;
+      right: 1.5rem;
+      max-width: 420px;
+      width: calc(100% - 3rem);
+      background: rgba(9, 9, 11, 0.96);
+      border: 1px solid rgba(244, 63, 94, 0.6);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 12px 40px rgba(244, 63, 94, 0.25);
       backdrop-filter: blur(20px);
       z-index: 100;
       display: none;
-      animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: slideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
     @keyframes slideIn {
-      from { transform: translateY(20px); opacity: 0; }
+      from { transform: translateY(18px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
     .toast-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.3rem;
     }
     .toast-tag {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      color: #f43f5e;
+      color: #fb7185;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
     .toast-body {
-      font-size: 0.875rem;
-      line-height: 1.4;
-      color: #e5e7eb;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #e4e4e7;
     }
 
     /* Feed Table */
     .table-container {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       backdrop-filter: blur(16px);
     }
     .table-header {
-      padding: 1.25rem 1.5rem;
+      padding: 1rem 1.35rem;
       border-bottom: 1px solid var(--card-border);
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
+      gap: 0.75rem;
     }
     .table-title {
-      font-size: 1.125rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .filter-btn {
+      padding: 0.3rem 0.65rem;
+      border-radius: 7px;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-btn.active {
+      background: rgba(6, 182, 212, 0.14);
+      border-color: rgba(6, 182, 212, 0.4);
+      color: #22d3ee;
+    }
+    .table-scroll {
+      overflow-x: auto;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.875rem;
+      font-size: 0.84rem;
     }
     th {
-      padding: 0.875rem 1.25rem;
+      padding: 0.8rem 1.25rem;
       background: rgba(255, 255, 255, 0.02);
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       border-bottom: 1px solid var(--card-border);
+      white-space: nowrap;
     }
     td {
-      padding: 1rem 1.25rem;
+      padding: 0.9rem 1.25rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: #d1d5db;
+      color: #d4d4d8;
+      white-space: nowrap;
     }
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255, 255, 255, 0.02); }
-    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; }
+    tr:hover td { background: rgba(255, 255, 255, 0.025); }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
     .badge {
       display: inline-flex;
       align-items: center;
-      padding: 0.2rem 0.6rem;
+      padding: 0.2rem 0.55rem;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
       font-weight: 600;
     }
-    .badge-danger { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
-    .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .badge-emerald { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-danger { background: rgba(244, 63, 94, 0.14); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .badge-amber { background: rgba(245, 158, 11, 0.14); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.14); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
     .empty-state {
-      padding: 4rem 2rem;
+      padding: 3.5rem 1.5rem;
       text-align: center;
       color: var(--text-muted);
     }
     @keyframes flashRow {
-      0% { background: rgba(99, 102, 241, 0.25); }
+      0% { background: rgba(6, 182, 212, 0.22); }
       100% { background: transparent; }
     }
     .new-row {
-      animation: flashRow 2s ease-out;
+      animation: flashRow 1.8s ease-out;
     }
   </style>
 </head>
@@ -587,22 +679,27 @@ export class DashboardManager {
   <header>
     <div class="brand">
       <div class="shield-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
       </div>
-      <span>ai-shield <span style="font-weight:400; opacity:0.6; font-size: 0.9rem;">Live Monitor</span></span>
+      <span>AI-Shield</span>
+      <span class="ver-pill">v0.3.5</span>
+      <span style="font-weight:500; color:#71717a; font-size:0.85rem;">Live Monitor</span>
       <div class="badge-live">
         <div class="pulse-dot"></div>
         ACTIVE DEFENSE
       </div>
     </div>
     <div class="header-actions">
+      <a class="btn btn-outline" href="https://ai-shield-dev.vercel.app/docs" target="_blank" rel="noreferrer">
+        Docs
+      </a>
       <button class="btn btn-outline" id="audioToggle">
-        <span id="audioIcon">🔔 Sound ON</span>
+        <span id="audioIcon">Sound ON</span>
       </button>
       <button class="btn btn-primary" id="testAttackBtn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Simulate Bot Attack
       </button>
     </div>
@@ -615,28 +712,44 @@ export class DashboardManager {
         <div class="card-title">Bots Intercepted</div>
         <div class="card-val text-rose" id="m-intercepted">0</div>
         <div class="card-sub text-rose">
-          <span>●</span> Fed synthetic poisoned responses (HTTP 200)
+          <span>●</span> Synthetic poison served (HTTP 200)
         </div>
       </div>
       <div class="card">
         <div class="card-title">Honeypot Traps Sprung</div>
         <div class="card-val text-amber" id="m-honeypot">0</div>
         <div class="card-sub text-amber">
-          <span>●</span> Scrapers quarantined via hidden routes
+          <span>●</span> Scrapers flagged via hidden traps
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Search Engines Allowed (SEO)</div>
+        <div class="card-title">Search Engines Allowed</div>
         <div class="card-val text-emerald" id="m-goodbots">0</div>
         <div class="card-sub text-emerald">
-          <span>●</span> 0% false positives, 100% crawl integrity
+          <span>●</span> 100% SEO pass-through integrity
         </div>
       </div>
       <div class="card">
         <div class="card-title">Fake Tokens Injected</div>
-        <div class="card-val text-indigo" id="m-tokens">0</div>
-        <div class="card-sub text-indigo">
-          <span>●</span> AI scrapers polluted with synthetic catalog data
+        <div class="card-val text-cyan" id="m-tokens">0</div>
+        <div class="card-sub text-cyan">
+          <span>●</span> Synthetic noise fed to scrapers
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Bots & Targeted Routes Breakdown -->
+    <div class="insights-grid">
+      <div class="card">
+        <div class="card-title">Top Detected Bots</div>
+        <div class="insight-list" id="top-bots-list">
+          <div style="font-size:0.78rem; color:#71717a;">No bot activity recorded yet.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Top Targeted Routes</div>
+        <div class="insight-list" id="top-routes-list">
+          <div style="font-size:0.78rem; color:#71717a;">No targeted routes recorded yet.</div>
         </div>
       </div>
     </div>
@@ -644,38 +757,47 @@ export class DashboardManager {
     <!-- Live Event Feed Table -->
     <div class="table-container">
       <div class="table-header">
-        <div class="table-title">Real-Time Threat Interception Stream</div>
-        <div class="badge-live" style="font-size: 0.7rem;">
-          <span id="conn-status">Connecting to stream...</span>
+        <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+          <div class="table-title">Real-Time Threat Interception Stream</div>
+          <div class="badge-live" style="font-size: 0.68rem;">
+            <span id="conn-status">Connecting to stream...</span>
+          </div>
+        </div>
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="ALL">All</button>
+          <button class="filter-btn" data-filter="POISON">Poisoned</button>
+          <button class="filter-btn" data-filter="HONEYPOT">Honeypot</button>
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Bot / Persona</th>
-            <th>Threat Score</th>
-            <th>Route Attacked</th>
-            <th>Defense Action</th>
-            <th>Client Hash</th>
-          </tr>
-        </thead>
-        <tbody id="event-rows">
-          <tr>
-            <td colspan="6" class="empty-state">
-              Listening for incoming crawlers... Waiting for bot traffic.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Bot / Persona</th>
+              <th>Threat Score</th>
+              <th>Route Attacked</th>
+              <th>Defense Action</th>
+              <th>Client Hash</th>
+            </tr>
+          </thead>
+          <tbody id="event-rows">
+            <tr>
+              <td colspan="6" class="empty-state">
+                Listening for incoming crawlers... Click "Simulate Bot Attack" to test live.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 
   <!-- Live Pop-up Alert Toast -->
   <div id="alert-toast">
     <div class="toast-header">
-      <span class="toast-tag">🚨 AI Crawler Intercepted</span>
-      <span class="mono" style="font-size: 0.75rem; color: #9ca3af;" id="toast-time">Just now</span>
+      <span class="toast-tag">AI Crawler Intercepted</span>
+      <span class="mono" style="font-size: 0.72rem; color: #a1a1aa;" id="toast-time">Just now</span>
     </div>
     <div class="toast-body" id="toast-body">
       <strong>GPTBot</strong> attempted to scrape <span class="mono">/api/products</span>.
@@ -687,8 +809,9 @@ export class DashboardManager {
     const basePath = '${basePath}';
     let soundEnabled = true;
     let audioCtx = null;
+    let activeFilter = 'ALL';
+    let cachedEvents = [];
 
-    // Synthesize gentle sci-fi alert chime via Web Audio API (no external file dependencies)
     function playAlertChime() {
       if (!soundEnabled) return;
       try {
@@ -698,8 +821,8 @@ export class DashboardManager {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, now); // D5
-        osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+        osc.frequency.setValueAtTime(587.33, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
         gain.gain.setValueAtTime(0.08, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
         osc.connect(gain);
@@ -711,33 +834,59 @@ export class DashboardManager {
       }
     }
 
-    // Toggle audio
     document.getElementById('audioToggle').addEventListener('click', () => {
       soundEnabled = !soundEnabled;
-      document.getElementById('audioIcon').innerText = soundEnabled ? '🔔 Sound ON' : '🔕 Sound OFF';
+      document.getElementById('audioIcon').innerText = soundEnabled ? 'Sound ON' : 'Sound OFF';
     });
 
-    // Simulate bot attack button
+    document.querySelectorAll('.filter-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.getAttribute('data-filter') || 'ALL';
+        renderRows(cachedEvents, false);
+      });
+    });
+
     document.getElementById('testAttackBtn').addEventListener('click', async () => {
       try {
-        const res = await fetch(basePath + '/api/test-event', { method: 'POST' });
-        const data = await res.json();
-        console.log('Simulated attack triggered:', data);
+        await fetch(basePath + '/api/test-event', { method: 'POST' });
       } catch (err) {
         console.error('Test attack failed:', err);
       }
     });
 
-    // Update metric cards
+    function renderBreakdown(elId, mapObj, emptyText) {
+      const container = document.getElementById(elId);
+      if (!container) return;
+      const entries = Object.entries(mapObj || {}).sort((a, b) => b[1] - a[1]).slice(0, 4);
+      if (entries.length === 0) {
+        container.innerHTML = '<div style="font-size:0.78rem; color:#71717a;">' + emptyText + '</div>';
+        return;
+      }
+      const maxVal = Math.max(...entries.map((e) => Number(e[1]) || 0), 1);
+      container.innerHTML = entries.map(([label, count]) => {
+        const pct = Math.max(8, Math.round((Number(count) / maxVal) * 100));
+        return '<div class="insight-row">' +
+          '<div class="insight-meta">' +
+            '<span class="mono" style="color:#e4e4e7;">' + escapeHtml(label) + '</span>' +
+            '<span class="mono text-cyan">' + Number(count).toLocaleString() + '</span>' +
+          '</div>' +
+          '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '</div>';
+      }).join('');
+    }
+
     function updateStats(stats) {
       if (!stats) return;
       document.getElementById('m-intercepted').innerText = Number(stats.botsIntercepted || 0).toLocaleString();
       document.getElementById('m-honeypot').innerText = Number(stats.honeypotTriggers || 0).toLocaleString();
       document.getElementById('m-goodbots').innerText = Number(stats.goodBotsAllowed || 0).toLocaleString();
       document.getElementById('m-tokens').innerText = Number(stats.estimatedFakeTokens || 0).toLocaleString();
+      renderBreakdown('top-bots-list', stats.topBots, 'No bot activity recorded yet.');
+      renderBreakdown('top-routes-list', stats.topRoutes, 'No targeted routes recorded yet.');
     }
 
-    // Show floating alert toast
     let toastTimer = null;
     function triggerAlertToast(evt) {
       const toast = document.getElementById('alert-toast');
@@ -761,28 +910,36 @@ export class DashboardManager {
       return String(str || '').replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
     }
 
-    // Render table rows
     function renderRows(events, isNew) {
+      cachedEvents = Array.isArray(events) ? events : [];
       const tbody = document.getElementById('event-rows');
-      if (!events || events.length === 0) return;
+      const filtered = cachedEvents.filter((evt) => {
+        if (activeFilter === 'HONEYPOT') return String(evt.action || '').includes('HONEYPOT');
+        if (activeFilter === 'POISON') return !String(evt.action || '').includes('HONEYPOT');
+        return true;
+      });
 
-      tbody.innerHTML = events.map((evt, idx) => {
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No matching interception events yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((evt, idx) => {
         const timeStr = new Date(evt.timestamp).toLocaleTimeString();
-        const badgeClass = evt.action.includes('HONEYPOT') ? 'badge-amber' : 'badge-danger';
+        const badgeClass = String(evt.action || '').includes('HONEYPOT') ? 'badge-amber' : 'badge-danger';
         const flashClass = isNew && idx === 0 ? 'new-row' : '';
 
         return '<tr class="' + flashClass + '">' +
           '<td class="mono">' + timeStr + '</td>' +
           '<td><strong>' + escapeHtml(evt.botName) + '</strong></td>' +
           '<td><span class="mono">' + evt.score + '/100</span></td>' +
-          '<td class="mono text-indigo">' + escapeHtml(evt.path) + '</td>' +
+          '<td class="mono text-cyan">' + escapeHtml(evt.path) + '</td>' +
           '<td><span class="badge ' + badgeClass + '">' + escapeHtml(evt.action) + '</span></td>' +
           '<td class="mono" style="opacity:0.7;">' + escapeHtml(evt.ipHash) + '</td>' +
         '</tr>';
       }).join('');
     }
 
-    // Connect SSE stream
     function initSSE() {
       const connStatus = document.getElementById('conn-status');
       let es = null;
@@ -804,7 +961,6 @@ export class DashboardManager {
             } else if (data.type === 'event') {
               updateStats(data.stats);
               triggerAlertToast(data.event);
-              // Fetch latest list or unshift
               fetch(basePath + '/api/stats')
                 .then(r => r.json())
                 .then(res => {
@@ -820,10 +976,9 @@ export class DashboardManager {
           connStatus.innerText = '● Polling Fallback';
           connStatus.style.color = '#fbbf24';
           es.close();
-          // Fallback polling every 3 seconds
           setInterval(fetchLatestStats, 3000);
         };
-      } catch (err) {
+      } catch {
         connStatus.innerText = '● Polling Mode';
         setInterval(fetchLatestStats, 3000);
       }
@@ -835,12 +990,11 @@ export class DashboardManager {
         const data = await res.json();
         if (data.stats) updateStats(data.stats);
         if (data.recentEvents) renderRows(data.recentEvents, false);
-      } catch (err) {
+      } catch {
         // silent
       }
     }
 
-    // Start on page load
     initSSE();
   </script>
 </body>
