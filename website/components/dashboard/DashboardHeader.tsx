@@ -68,6 +68,14 @@ export default function DashboardHeader({
           )}
 
           <Link
+            href="/docs"
+            className="px-2.5 py-1.5 rounded-lg border border-white/10 bg-zinc-900 text-xs font-medium text-zinc-300 hover:text-white transition-colors"
+            title="Documentation"
+          >
+            Docs
+          </Link>
+
+          <Link
             href="/dashboard/settings"
             className="p-1.5 rounded-lg border border-white/10 bg-zinc-900 text-zinc-400 hover:text-white transition-colors"
             title="Settings & Billing"
@@ -76,11 +84,11 @@ export default function DashboardHeader({
           </Link>
 
           <a
-            href="https://github.com/samimcodes/ai-shield"
+            href="https://github.com/samimcodes/AI-Shield"
             target="_blank"
             rel="noreferrer"
             className="p-1.5 rounded-lg border border-white/10 bg-zinc-900 text-zinc-400 hover:text-white transition-colors"
-            title="Documentation"
+            title="GitHub Repository"
           >
             <ExternalLink className="h-4 w-4" />
           </a>

@@ -125,7 +125,7 @@ export default aiShieldWorker({
             {/* Interactive Code Switcher */}
             <div className="mt-6 rounded-xl border border-white/10 bg-zinc-950/80 p-3">
               <div className="flex items-center justify-between border-b border-white/5 pb-2 mb-2 text-[10px] font-mono">
-                <div className="flex gap-1.5">
+                <div className="flex flex-wrap gap-1.5">
                   <button
                     type="button"
                     onClick={() => setActiveTab('express')}

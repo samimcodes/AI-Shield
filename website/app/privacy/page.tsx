@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Shield, ArrowLeft, Lock, Database, EyeOff, UserCheck } from 'lucide-react';
+import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Privacy Policy | AI-Shield',
@@ -9,7 +10,7 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 selection:bg-cyan-500/20 selection:text-cyan-300">
+    <div className="min-h-screen flex flex-col bg-[#09090b] text-zinc-100 selection:bg-cyan-500/20 selection:text-cyan-300">
       {/* Header */}
       <header className="border-b border-white/10 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-40">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -117,6 +118,7 @@ export default function PrivacyPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
