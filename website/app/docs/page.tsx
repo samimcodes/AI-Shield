@@ -390,43 +390,45 @@ app.listen(3000);`;
         </div>
       </header>
 
-      {/* Docs Hero Banner */}
-      <div className="border-b border-white/10 bg-grid-pattern radial-spotlight py-12">
+      {/* Compact Docs Hero Banner */}
+      <div className="border-b border-white/10 bg-grid-pattern radial-spotlight py-5 sm:py-6">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-[11px] font-mono font-semibold text-cyan-400 mb-4">
-              <BookOpen className="h-3.5 w-3.5" />
-              <span>Developer Documentation</span>
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2.5 py-0.5 text-[10px] font-mono font-semibold text-cyan-400 mb-2">
+                <BookOpen className="h-3 w-3" />
+                <span>Developer Documentation</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Deploy Autonomous AI Crawler Defense in 60 Seconds
+              </h1>
+              <p className="mt-1.5 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                Integrate via 1-line script, Express, Next.js Edge, or Cloudflare Workers—100% SEO safe.
+              </p>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Deploy Autonomous AI Crawler Defense in 60 Seconds
-            </h1>
-            <p className="mt-3 text-sm sm:text-base text-zinc-400 leading-relaxed">
-              Integrate via 1-line HTML script, Express middleware, Next.js Edge, or Cloudflare Workers. Keep Googlebot happy while silently poisoning unauthorized LLM scrapers.
-            </p>
 
-            {/* Quick Stat Pills */}
-            <div className="mt-6 flex flex-wrap gap-3">
-              <div className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/70 px-3.5 py-2 text-xs">
-                <Zap className="h-3.5 w-3.5 text-[#06B6D4]" />
+            {/* Compact Quick Stat Pills */}
+            <div className="flex flex-wrap gap-2 shrink-0">
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-zinc-900/70 px-2.5 py-1.5 text-[11px]">
+                <Zap className="h-3 w-3 text-[#06B6D4]" />
                 <span className="font-mono text-white font-semibold">&lt; 1.8ms</span>
-                <span className="text-zinc-400">Edge Evaluation</span>
+                <span className="text-zinc-400">Edge</span>
               </div>
-              <div className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/70 px-3.5 py-2 text-xs">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#10B981]" />
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-zinc-900/70 px-2.5 py-1.5 text-[11px]">
+                <CheckCircle2 className="h-3 w-3 text-[#10B981]" />
                 <span className="font-mono text-white font-semibold">100%</span>
-                <span className="text-zinc-400">SEO Whitelisted</span>
+                <span className="text-zinc-400">SEO Safe</span>
               </div>
-              <div className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/70 px-3.5 py-2 text-xs">
-                <ShieldCheck className="h-3.5 w-3.5 text-purple-400" />
+              <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-zinc-900/70 px-2.5 py-1.5 text-[11px]">
+                <ShieldCheck className="h-3 w-3 text-purple-400" />
                 <span className="font-mono text-white font-semibold">50+</span>
-                <span className="text-zinc-400">AI Bot Signatures</span>
+                <span className="text-zinc-400">Bots</span>
               </div>
             </div>
           </div>
 
-          {/* 30-Second Quickstart Cards */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {/* Compact Quickstart Selector Strip */}
+          <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2.5">
             {QUICKSTART_CARDS.map((card) => {
               const Icon = card.icon;
               return (
@@ -434,20 +436,19 @@ app.listen(3000);`;
                   key={card.id}
                   href={`#${card.id}`}
                   onClick={() => setActiveNav(card.id)}
-                  className="group rounded-2xl border border-white/10 bg-zinc-950/70 hover:bg-zinc-900/90 hover:border-cyan-500/40 p-4 transition-all"
+                  className="group flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-zinc-950/70 hover:bg-zinc-900/90 hover:border-cyan-500/40 px-3 py-2.5 transition-all"
                 >
-                  <div className="flex items-center justify-between mb-2.5">
-                    <div className="h-8 w-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center group-hover:border-cyan-500/30">
-                      <Icon className="h-4 w-4 text-[#06B6D4]" />
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="h-7 w-7 shrink-0 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center group-hover:border-cyan-500/30">
+                      <Icon className="h-3.5 w-3.5 text-[#06B6D4]" />
                     </div>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-white/5 text-zinc-400 border border-white/10">
-                      {card.badge}
+                    <span className="text-xs font-semibold text-white group-hover:text-cyan-300 transition-colors truncate">
+                      {card.title}
                     </span>
                   </div>
-                  <div className="text-sm font-semibold text-white group-hover:text-cyan-300 transition-colors">
-                    {card.title}
-                  </div>
-                  <p className="mt-1 text-xs text-zinc-400 leading-relaxed">{card.desc}</p>
+                  <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/5 text-zinc-400 border border-white/10">
+                    {card.badge}
+                  </span>
                 </a>
               );
             })}
@@ -456,7 +457,7 @@ app.listen(3000);`;
       </div>
 
       {/* Main Docs Grid */}
-      <main className="flex-1 mx-auto max-w-6xl w-full px-4 sm:px-6 py-12">
+      <main className="flex-1 mx-auto max-w-6xl w-full px-4 sm:px-6 py-7 sm:py-8">
         {/* Mobile Quick Jump Pills */}
         <div className="md:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-6 border-b border-white/10">
           {ALL_NAV_ITEMS.map((item) => (
