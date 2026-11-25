@@ -11,8 +11,8 @@ export interface PolarCheckoutResponse {
 }
 
 export const POLAR_PRODUCTS: Record<'PRO' | 'BUSINESS', string> = {
-  PRO: process.env.POLAR_PRO_PRODUCT_ID || '354a73cb-cf0e-4e6f-b550-63a4a0d46d33',
-  BUSINESS: process.env.POLAR_BUSINESS_PRODUCT_ID || '88ac5769-d040-4bcc-b720-3ba6b8e26594',
+  PRO: process.env.POLAR_PRO_PRODUCT_ID || 'e08f52f2-66f0-49d9-a3a1-c2fd9e5883f1',
+  BUSINESS: process.env.POLAR_BUSINESS_PRODUCT_ID || '2c424374-a4dd-4fb0-8fd7-e5b48401701d',
 };
 
 /**
