@@ -8,14 +8,16 @@ import {
   AlertTriangle,
   ArrowRight,
   Loader2,
-  Lock,
   RefreshCw,
-  Sparkles,
   Play,
+  Copy,
+  Check,
+  Terminal,
 } from 'lucide-react';
 
 export default function Hero() {
   const [url, setUrl] = useState('');
+  const [copiedCli, setCopiedCli] = useState(false);
   const [scanState, setScanState] = useState<'idle' | 'scanning' | 'completed'>('idle');
   const [scanStep, setScanStep] = useState(0);
   const [scanResult, setScanResult] = useState<{
@@ -146,7 +148,7 @@ export default function Hero() {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
           <a
             href="/dashboard"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#06B6D4] to-[#10B981] hover:opacity-95 text-zinc-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98] group"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#06B6D4] to-[#10B981] hover:opacity-95 text-zinc-950 font-bold px-7 py-3.5 text-sm transition-all shadow-lg shadow-cyan-500/25 active:scale-[0.98] group"
           >
             <Shield className="h-4 w-4 transition-transform group-hover:scale-110" />
             <span>Start Free Defense</span>
@@ -161,18 +163,76 @@ export default function Hero() {
           </a>
         </div>
 
+        {/* 1-Click Copyable CLI Install Pill (Vercel / Resend Style) */}
+        <div className="mt-6 flex justify-center">
+          <button
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText('npm i @samimcodes/ai-shield');
+              setCopiedCli(true);
+              setTimeout(() => setCopiedCli(false), 2000);
+            }}
+            className="group inline-flex items-center gap-3 rounded-full border border-white/10 bg-zinc-950/90 hover:border-cyan-500/40 px-4 py-2 text-xs font-mono text-zinc-300 shadow-lg backdrop-blur-md transition-all cursor-pointer"
+          >
+            <Terminal className="h-3.5 w-3.5 text-[#06B6D4]" />
+            <span>
+              <span className="text-zinc-500 select-none">$ </span>
+              npm i @samimcodes/ai-shield
+            </span>
+            <span className="pl-2 border-l border-white/10 text-zinc-400 group-hover:text-white flex items-center gap-1">
+              {copiedCli ? (
+                <>
+                  <Check className="h-3.5 w-3.5 text-[#10B981]" />
+                  <span className="text-[#10B981] text-[11px]">Copied</span>
+                </>
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
+            </span>
+          </button>
+        </div>
+
+        {/* Ecosystem & Stack Compatibility Strip */}
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-zinc-500">
+            Drop-in protection for modern stacks
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-xs sm:text-sm font-semibold text-zinc-400">
+            {['Next.js', 'Express.js', 'Node.js', 'Cloudflare', 'WordPress', 'Shopify'].map((stack) => (
+              <span
+                key={stack}
+                className="hover:text-white transition-colors tracking-tight"
+              >
+                {stack}
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* Interactive Live Vulnerability Scanner Widget with Border Beam */}
-        <div id="scanner" className="mt-12 max-w-2xl mx-auto text-left border-beam rounded-2xl">
+        <div id="scanner" className="mt-10 max-w-2xl mx-auto text-left border-beam rounded-2xl">
           <div className="relative rounded-2xl border border-white/10 bg-zinc-900/70 p-6 sm:p-7 backdrop-blur-2xl shadow-2xl overflow-hidden">
             {/* Header / Label */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <div className="flex items-center gap-2">
                 <Search className="h-4 w-4 text-[#06B6D4]" />
                 <span className="text-xs uppercase tracking-wider font-semibold text-zinc-400">
                   Instant Scraper Vulnerability Audit
                 </span>
               </div>
-              <span className="text-xs text-zinc-500 font-mono">Free • No install needed</span>
+              <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
+                <span>Try:</span>
+                {['vercel.com', 'openai.com'].map((sample) => (
+                  <button
+                    key={sample}
+                    type="button"
+                    onClick={() => setUrl(sample)}
+                    className="text-cyan-400/80 hover:text-cyan-300 underline decoration-cyan-500/30 underline-offset-2 cursor-pointer"
+                  >
+                    {sample}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Input Form */}
