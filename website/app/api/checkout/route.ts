@@ -46,10 +46,11 @@ export async function POST(req: NextRequest) {
       isSimulated: !!isSimulated,
       plan,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to create checkout session';
     console.error('[api/checkout] Error generating checkout session:', err);
     return NextResponse.json(
-      { error: err.message || 'Failed to create checkout session' },
+      { error: message },
       { status: 500 }
     );
   }

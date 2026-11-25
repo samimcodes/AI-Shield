@@ -112,26 +112,25 @@ async function validateApiKey(req: NextRequest, isPost = false) {
 
     // 2. Persist usage increment & bot event log reliably
     try {
-      const operations: any[] = [
+      const operations = [
         prisma.apiKey.update({
           where: { id: keyRecord.id },
           data: { requestsThisMonth: { increment: 1 } },
         }),
+        ...(bodyData.botName && bodyData.path
+          ? [
+              prisma.botLog.create({
+                data: {
+                  apiKeyId: keyRecord.id,
+                  botName: String(bodyData.botName),
+                  path: String(bodyData.path),
+                  actionTaken: bodyData.actionTaken === 'BLOCKED' ? 'BLOCKED' : 'POISONED',
+                  bandwidthSavedBytes: BigInt(bodyData.bandwidthSavedBytes ?? 0),
+                },
+              }),
+            ]
+          : []),
       ];
-
-      if (bodyData.botName && bodyData.path) {
-        operations.push(
-          prisma.botLog.create({
-            data: {
-              apiKeyId: keyRecord.id,
-              botName: String(bodyData.botName),
-              path: String(bodyData.path),
-              actionTaken: bodyData.actionTaken === 'BLOCKED' ? 'BLOCKED' : 'POISONED',
-              bandwidthSavedBytes: BigInt(bodyData.bandwidthSavedBytes ?? 0),
-            },
-          })
-        );
-      }
 
       await prisma.$transaction(operations);
     } catch (logErr) {
@@ -163,9 +162,10 @@ async function validateApiKey(req: NextRequest, isPost = false) {
         },
       }
     );
-  } catch (dbErr: any) {
+  } catch (dbErr: unknown) {
+    const message = dbErr instanceof Error ? dbErr.message : 'Database error';
     // If DB is offline or table uninitialized, provide seamless fallback for as_live_ keys
-    console.warn('[ai-shield:validate] Database unavailable, returning fallback plan:', dbErr.message);
+    console.warn('[ai-shield:validate] Database unavailable, returning fallback plan:', message);
 
     const isProHint = apiKey.includes('pro');
     const fallbackTier = isProHint ? PLAN_CONFIGS.PRO : PLAN_CONFIGS.FREE;

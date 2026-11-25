@@ -18,17 +18,20 @@ export async function POST(req: NextRequest) {
     }
 
     // Check key in DB if available
-    let keyRecord = null;
+    let isKeyInDb = false;
     try {
-      keyRecord = await prisma.apiKey.findUnique({
+      const keyRecord = await prisma.apiKey.findUnique({
         where: { key: apiKey },
+        select: { id: true, isActive: true },
       });
+      isKeyInDb = Boolean(keyRecord?.isActive);
     } catch {
       // In offline/mock mode, proceed if format is valid
     }
 
     return NextResponse.json({
       connected: true,
+      registeredInDb: isKeyInDb,
       status: 'ACTIVE',
       message: 'Connected! AI-Shield is actively protecting your site.',
       latencyMs: 1.2,
@@ -37,9 +40,10 @@ export async function POST(req: NextRequest) {
       honeypotActive: true,
       seoSafe: true,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Verification failed';
     return NextResponse.json(
-      { connected: false, error: err.message || 'Verification failed' },
+      { connected: false, error: message },
       { status: 500 }
     );
   }

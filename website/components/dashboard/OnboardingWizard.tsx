@@ -295,7 +295,13 @@ export default {
               {isVerified && (
                 <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-medium text-[#10B981] animate-in fade-in duration-300">
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
-                  <span>Connected! AI-Shield is actively protecting your site.</span>
+                  <span>Connected! AI-Shield is actively defending your site.</span>
+                </div>
+              )}
+
+              {verifyError && (
+                <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-xs font-medium text-red-300">
+                  <span>{verifyError}</span>
                 </div>
               )}
             </div>

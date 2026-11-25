@@ -16,6 +16,29 @@ export const metadata = {
   description: 'Monitor live bot interceptions, honeypot traps, and data poisoning activity in real time.',
 };
 
+function buildDailyStats(rawLogs: { timestamp: Date }[]) {
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dailyMap = new Map<string, { day: string; botsBlocked: number; seoAllowed: number }>();
+  const nowMs = Date.now();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(nowMs - i * 24 * 60 * 60 * 1000);
+    const key = d.toISOString().slice(0, 10);
+    dailyMap.set(key, {
+      day: dayNames[d.getUTCDay()] ?? 'Day',
+      botsBlocked: 0,
+      seoAllowed: 0,
+    });
+  }
+  for (const log of rawLogs) {
+    const key = log.timestamp.toISOString().slice(0, 10);
+    const entry = dailyMap.get(key);
+    if (entry) {
+      entry.botsBlocked += 1;
+    }
+  }
+  return Array.from(dailyMap.values());
+}
+
 export default async function DashboardPage() {
   const session = await getSession();
   if (!session) {
@@ -84,27 +107,7 @@ export default async function DashboardPage() {
       : [[], 0, { _sum: { bandwidthSavedBytes: null } }];
 
   const bandwidthSavedBytes = Number(aggBandwidth._sum.bandwidthSavedBytes ?? 0);
-
-  // Build 7-day rolling telemetry from real BotLog timestamps
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const dailyMap = new Map<string, { day: string; botsBlocked: number; seoAllowed: number }>();
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
-    const key = d.toISOString().slice(0, 10);
-    dailyMap.set(key, {
-      day: dayNames[d.getUTCDay()] ?? 'Day',
-      botsBlocked: 0,
-      seoAllowed: 0,
-    });
-  }
-  for (const log of rawLogs) {
-    const key = log.timestamp.toISOString().slice(0, 10);
-    const entry = dailyMap.get(key);
-    if (entry) {
-      entry.botsBlocked += 1;
-    }
-  }
-  const dailyStats = Array.from(dailyMap.values());
+  const dailyStats = buildDailyStats(rawLogs);
 
   const apiKeyItems = (user?.apiKeys ?? []).map((k) => ({
     id: k.id,

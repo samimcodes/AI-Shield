@@ -41,7 +41,7 @@ export async function createPolarCheckout({
   }
 
   const isDummyEmail = !email || email.includes('example.com') || email.includes('getaishield.dev') || email.includes('test.com') || !email.includes('@');
-  const requestBody: any = {
+  const requestBody: Record<string, unknown> = {
     products: [productId],
     success_url: returnUrl,
     metadata: {
@@ -74,8 +74,9 @@ export async function createPolarCheckout({
       checkoutUrl: data.url,
       isSimulated: false,
     };
-  } catch (err: any) {
-    console.error('[polar] Error creating checkout:', err.message);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Checkout error';
+    console.error('[polar] Error creating checkout:', message);
     throw err;
   }
 }
