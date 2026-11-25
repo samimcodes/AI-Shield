@@ -4,12 +4,19 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Shield, Zap, Sparkles, TrendingUp, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
+interface DailyStatPoint {
+  day: string;
+  botsBlocked: number;
+  seoAllowed: number;
+}
+
 interface AnalyticsOverviewProps {
   requestsUsed?: number;
   requestsMax?: number;
   planName?: string;
   totalBotsBlocked?: number;
   bandwidthSavedBytes?: number;
+  dailyStats?: DailyStatPoint[];
 }
 
 export default function AnalyticsOverview({
@@ -18,6 +25,7 @@ export default function AnalyticsOverview({
   planName = 'Free',
   totalBotsBlocked = 0,
   bandwidthSavedBytes = 0,
+  dailyStats,
 }: AnalyticsOverviewProps) {
   const percentUsed = requestsMax > 0 ? Math.min(100, Math.round((requestsUsed / requestsMax) * 100)) : 0;
   const formattedBandwidth =
@@ -26,18 +34,20 @@ export default function AnalyticsOverview({
       : `${(bandwidthSavedBytes / 1024).toFixed(1)} KB`;
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  // 7-day simulated dataset
-  const chartData = [
-    { day: 'Mon', botsBlocked: 480, seoAllowed: 1200 },
-    { day: 'Tue', botsBlocked: 620, seoAllowed: 1450 },
-    { day: 'Wed', botsBlocked: 510, seoAllowed: 1300 },
-    { day: 'Thu', botsBlocked: 740, seoAllowed: 1600 },
-    { day: 'Fri', botsBlocked: 890, seoAllowed: 1720 },
-    { day: 'Sat', botsBlocked: 420, seoAllowed: 950 },
-    { day: 'Sun', botsBlocked: 558, seoAllowed: 1100 },
+  const chartData = dailyStats && dailyStats.length > 0 ? dailyStats : [
+    { day: 'Mon', botsBlocked: 0, seoAllowed: 0 },
+    { day: 'Tue', botsBlocked: 0, seoAllowed: 0 },
+    { day: 'Wed', botsBlocked: 0, seoAllowed: 0 },
+    { day: 'Thu', botsBlocked: 0, seoAllowed: 0 },
+    { day: 'Fri', botsBlocked: 0, seoAllowed: 0 },
+    { day: 'Sat', botsBlocked: 0, seoAllowed: 0 },
+    { day: 'Sun', botsBlocked: 0, seoAllowed: 0 },
   ];
 
-  const maxVal = 2000;
+  const maxVal = Math.max(
+    10,
+    ...chartData.map((d) => Math.max(d.botsBlocked, d.seoAllowed))
+  );
   const svgHeight = 160;
   const svgWidth = 600;
 

@@ -5,6 +5,7 @@ import Comparison from '../components/Comparison';
 import Playground from '../components/Playground';
 import SetupFlow from '../components/SetupFlow';
 import Pricing from '../components/Pricing';
+import Faq from '../components/Faq';
 import Footer from '../components/Footer';
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
         <Playground />
         <SetupFlow />
         <Pricing />
+        <Faq />
       </main>
       <Footer />
     </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { redirect } from 'next/navigation';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import OnboardingWizard from '@/components/dashboard/OnboardingWizard';
+import ApiKeysManager from '@/components/dashboard/ApiKeysManager';
 import AnalyticsOverview from '@/components/dashboard/AnalyticsOverview';
 import BotActivityFeed, { type BotEventItem } from '@/components/dashboard/BotActivityFeed';
 import { getSession } from '@/lib/auth';
@@ -84,6 +85,36 @@ export default async function DashboardPage() {
 
   const bandwidthSavedBytes = Number(aggBandwidth._sum.bandwidthSavedBytes ?? 0);
 
+  // Build 7-day rolling telemetry from real BotLog timestamps
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dailyMap = new Map<string, { day: string; botsBlocked: number; seoAllowed: number }>();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+    const key = d.toISOString().slice(0, 10);
+    dailyMap.set(key, {
+      day: dayNames[d.getUTCDay()] ?? 'Day',
+      botsBlocked: 0,
+      seoAllowed: 0,
+    });
+  }
+  for (const log of rawLogs) {
+    const key = log.timestamp.toISOString().slice(0, 10);
+    const entry = dailyMap.get(key);
+    if (entry) {
+      entry.botsBlocked += 1;
+    }
+  }
+  const dailyStats = Array.from(dailyMap.values());
+
+  const apiKeyItems = (user?.apiKeys ?? []).map((k) => ({
+    id: k.id,
+    key: k.key,
+    name: k.name,
+    isActive: k.isActive,
+    requestsThisMonth: k.requestsThisMonth,
+    createdAt: k.createdAt.toISOString().slice(0, 10),
+  }));
+
   const initialEvents: BotEventItem[] = rawLogs.map((log) => ({
     id: log.id,
     botName: log.botName,
@@ -113,12 +144,15 @@ export default async function DashboardPage() {
       <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <OnboardingWizard apiKey={primaryKey} />
 
+        <ApiKeysManager initialKeys={apiKeyItems} />
+
         <AnalyticsOverview
           requestsUsed={requestsUsed}
           requestsMax={requestsMax}
           planName={planLabel}
           totalBotsBlocked={totalBotsBlocked}
           bandwidthSavedBytes={bandwidthSavedBytes}
+          dailyStats={dailyStats}
         />
 
         <BotActivityFeed initialEvents={initialEvents} apiKey={primaryKey} />

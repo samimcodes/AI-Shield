@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generateLiveApiKey, PLAN_CONFIGS, PlanType } from '@/lib/api-key';
+import { getSession } from '@/lib/auth';
 
 /**
  * GET /api/v1/keys
@@ -60,27 +61,28 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { email, name = 'Default API Key', plan = 'FREE' } = body;
+    const session = await getSession(req);
+    const body = await req.json().catch(() => ({}));
+    const email = (body.email as string | undefined) || session?.email;
+    const name = typeof body.name === 'string' && body.name.trim() ? body.name.trim() : 'Default API Key';
+    const plan = body.plan as PlanType | undefined;
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    // Upsert user
     const user = await prisma.user.upsert({
       where: { email },
       update: {
-        ...(plan && { plan: plan as any }),
+        ...(plan && !session ? { plan } : {}),
       },
       create: {
         email,
         name: body.userName ?? null,
-        plan: (plan as any) ?? 'FREE',
+        plan: plan ?? 'FREE',
       },
     });
 
-    // Generate new key
     const newKey = generateLiveApiKey();
 
     const apiKey = await prisma.apiKey.create({
@@ -98,12 +100,54 @@ export async function POST(req: NextRequest) {
         key: apiKey.key,
         name: apiKey.name,
         isActive: apiKey.isActive,
+        requestsThisMonth: apiKey.requestsThisMonth,
         createdAt: apiKey.createdAt,
       },
       plan: user.plan,
       limits: PLAN_CONFIGS[user.plan as PlanType] ?? PLAN_CONFIGS.FREE,
     }, { status: 201 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to create API key';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+/**
+ * DELETE /api/v1/keys?id=<keyId>
+ * Revoke/delete an API key belonging to the authenticated user.
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await getSession(req);
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const keyId = req.nextUrl.searchParams.get('id');
+    if (!keyId) {
+      return NextResponse.json({ error: 'Key id is required' }, { status: 400 });
+    }
+
+    const keyRecord = await prisma.apiKey.findFirst({
+      where: { id: keyId, userId: session.userId },
+    });
+
+    if (!keyRecord) {
+      return NextResponse.json({ error: 'API key not found' }, { status: 404 });
+    }
+
+    const totalKeys = await prisma.apiKey.count({ where: { userId: session.userId } });
+    if (totalKeys <= 1) {
+      return NextResponse.json(
+        { error: 'You must keep at least one active API key.' },
+        { status: 400 }
+      );
+    }
+
+    await prisma.apiKey.delete({ where: { id: keyRecord.id } });
+    return NextResponse.json({ deleted: true, id: keyRecord.id });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to delete API key';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
