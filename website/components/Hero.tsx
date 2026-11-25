@@ -323,7 +323,7 @@ export default function Hero() {
         </div>
 
         {/* Full-Width Instant Vulnerability Scanner Bar */}
-        <div id="scanner" className="mt-14 max-w-4xl mx-auto">
+        <div id="scanner" className="mt-14 max-w-4xl mx-auto scroll-mt-24">
           <div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-5 sm:p-6 backdrop-blur-xl shadow-2xl">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <div className="flex items-center gap-2">

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
+import Footer from '@/components/Footer';
 import {
   Shield,
   ArrowLeft,
@@ -118,7 +119,7 @@ function SettingsContent() {
   };
 
   return (
-    <main className="mx-auto max-w-5xl px-4 sm:px-6 py-10 space-y-8">
+    <main className="flex-1 mx-auto max-w-5xl w-full px-4 sm:px-6 py-10 space-y-8">
       {/* Success Alert Banner */}
       {showSuccessBanner && (
         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 sm:p-5 flex items-start justify-between gap-3 backdrop-blur-xl animate-in fade-in duration-300">
@@ -353,7 +354,7 @@ function SettingsContent() {
 
 export default function SettingsBillingPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 selection:bg-cyan-500/20 selection:text-cyan-300">
+    <div className="min-h-screen flex flex-col bg-[#09090b] text-zinc-100 selection:bg-cyan-500/20 selection:text-cyan-300">
       {/* Header */}
       <header className="border-b border-white/10 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-40">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -377,12 +378,13 @@ export default function SettingsBillingPage() {
       </header>
 
       <Suspense fallback={
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-20 text-center text-xs text-zinc-500 font-mono">
+        <div className="flex-1 mx-auto max-w-5xl px-4 sm:px-6 py-20 text-center text-xs text-zinc-500 font-mono">
           Loading billing settings...
         </div>
       }>
         <SettingsContent />
       </Suspense>
+      <Footer />
     </div>
   );
 }

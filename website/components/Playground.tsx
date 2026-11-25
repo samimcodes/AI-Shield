@@ -201,7 +201,7 @@ export default function Playground() {
   };
 
   return (
-    <section id="simulator" className="py-20 md:py-28 relative">
+    <section id="simulator" className="py-20 md:py-28 relative scroll-mt-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">

@@ -69,7 +69,7 @@ export default function Features() {
   ];
 
   return (
-    <section id="features" className="py-20 md:py-28 relative">
+    <section id="features" className="py-20 md:py-28 relative scroll-mt-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16">

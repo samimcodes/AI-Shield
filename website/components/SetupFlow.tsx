@@ -43,7 +43,7 @@ export default aiShieldWorker({
   };
 
   return (
-    <section id="how-it-works" className="py-20 md:py-28 relative">
+    <section id="how-it-works" className="py-20 md:py-28 relative scroll-mt-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
