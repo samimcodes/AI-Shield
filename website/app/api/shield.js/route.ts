@@ -4,7 +4,7 @@ export async function GET(req: NextRequest) {
   const keyParam = req.nextUrl.searchParams.get('key') || '';
 
   const scriptBody = `/**
- * AI-Shield Client Defense SDK (v0.3.3)
+ * AI-Shield Client Defense SDK (v0.3.4)
  * Autonomous client-side AI crawler detection & dynamic honeypot traps.
  */
 (function() {
